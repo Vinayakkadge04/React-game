@@ -1,12 +1,13 @@
 import React from 'react'
 import './homepage.css'
-import homebanner from '../images/homebanner.webp'
+
 import tictactoe from '../images/tictactoebanner.webp'
 import candycrush from '../images/candycrushBanner.webp'
 import hangman from '../images/hangman.webp'
 import memory from '../images/memorygameBanner.webp'
 import flappy from '../images/flappybird.webp'
 import rps from '../images/rockpaperscissor.webp'
+import snake from '../images/snake.webp'
 
 function HomePage() {
   return (
@@ -33,10 +34,14 @@ function HomePage() {
           <div className='imgDiv'>
             <a href={'/rps'}><img className='gameImg' src={rps} alt="" /></a>
           </div>
-
+          <div className='imgDiv'>
+            <a href={'/snake'}><img className='gameImg' src={snake} alt="" /></a>
+          </div>
+          <div className='imgDiv'>
+            <a href={'/dotnstar'}><img className='gameImg' src={snake} alt="" /></a>
+          </div>
 
       </div>
-
    </div>
   )
 }

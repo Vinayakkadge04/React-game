@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./rockpaperscissor.css";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { useNavigate} from "react-router-dom";
 
 function RockPaperScissor() {
 
@@ -16,6 +17,8 @@ function RockPaperScissor() {
   const [draw, setDraw] = useState(0);
   const [round , setround] = useState([]);
   const [finalWinner, setFinalWinner] = useState("");
+
+  let navigate = useNavigate()
 
   const handleClose = () => setShow(false);
   const handleClose1 = () => {setShow1(false); setround([]);
@@ -71,7 +74,7 @@ function RockPaperScissor() {
   return (
     <>
       <div className="mycontainer">
-        <div id="main">
+        <div id="rmain">
           <h1>Rock - Paper - Scissor</h1>
           <h4 className="choose">Choose any move</h4>
           <div className="buttons">
@@ -118,6 +121,20 @@ function RockPaperScissor() {
           </Modal>
 
         </div>
+          
+          <div>
+
+          <button className="reloadbtn" onClick={()=>window.location.reload()}>
+          Restart
+        </button>
+
+        <button className="reloadbtn" onClick={()=>navigate(-1)}>
+          Back to Home
+        </button>
+
+          </div>
+        
+
         <p className="result">Won = {win} || Lost = {lose} || Draw = {draw}</p>
       </div>
     </>
