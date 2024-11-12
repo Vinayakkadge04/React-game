@@ -1,0 +1,41 @@
+.buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-direction: row;
+   
+}
+.mycontainer{
+    background-color: blanchedalmond;
+    padding: 56px;
+}
+#main{
+    background-color: blanchedalmond;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.wbtn{
+    font-size: 76px;
+    background-color: aqua;
+    border-radius: 90px;
+    padding: 20px;
+    border: none;
+    width: 150px;
+}
+#main .choose{
+    margin: 35px 0;
+}
+.move{
+    font-weight: 600;
+    font-size: 22px;
+}
+.result{
+    color: grey;
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}

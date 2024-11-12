@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./tictactoe.css";
+import { useNavigate } from "react-router-dom";
+
 
 export default function TicTacToe() {
+
+
+  let navigate = useNavigate();
   const [data, setdata] = useState(["", "", "", "", "", "", "", "", ""]);
   var [count, setcount] = useState(0);
   const [end, setEnd] = useState(false);
@@ -166,9 +171,16 @@ export default function TicTacToe() {
           </div>
         </div>
 
-        <button className="restartBtn" onClick={reloadPage}>
+      <div>
+      <button className="reloadbtn" onClick={reloadPage}>
           Restart
         </button>
+
+        <button className="reloadbtn" onClick={()=>navigate(-1)}>
+          Back to Home
+        </button>
+      </div>
+     
 
         <div>
           {winner === "x" ? (
@@ -182,13 +194,7 @@ export default function TicTacToe() {
         
 
       </div>
-      <div>
-          <a href={"/hangman"}>
-          <button className="restartBtn">
-          Next Game
-        </button>
-          </a>
-      </div>
+     
     </div>
       
     </>

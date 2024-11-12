@@ -1,0 +1,26 @@
+.homeBanner{
+    width: 100%;
+}
+.bannerImg{
+    width: -webkit-fill-available;
+}
+.gameImg{
+    width: 230px;
+    /* border:2px solid #000; */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.imgGrid{
+    display: grid;
+    grid-template-columns: repeat(5 , 1fr);
+    column-gap: 15px;
+    row-gap: 20px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 35px;
+    
+}
+.imgDiv{
+    display: flex;
+    align-items: center;
+   justify-content: center;
+}

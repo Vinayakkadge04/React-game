@@ -1,0 +1,66 @@
+.imgbox{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sct2{
+    display: flex;
+    align-items: center;
+    justify-content: space-between
+}
+.imgbg{
+    background-color: aqua;
+    height: 65px;
+    width: 65px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    
+}
+/* .img{
+    height: 45px;
+    width: 45px;
+} */
+.gridView{
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    align-items: center;
+    row-gap: 45px;
+    margin: 84px;
+    padding: 50px;
+    border: 20px solid rgba(0,0,0,0.1);
+    border-radius: 14px;
+    margin-top: 0;
+}
+.cover{
+    height: 65px;
+    width: 65px;
+    background-color: blue;
+    position: absolute;
+  
+}
+.title{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 64px;
+    margin: 0;
+}
+#main{
+    background-color: rgba(128,128,0,0.5);
+    font-family: 'poppins';
+    padding-bottom: 120px;
+    padding-top: 50px;
+    position: relative;
+}
+.winnig{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 20px;
+}
+
+
+/* PopUp */
