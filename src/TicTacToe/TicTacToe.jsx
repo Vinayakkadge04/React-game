@@ -92,8 +92,8 @@ export default function TicTacToe() {
 
   return (
     <>
-    <div className="mycontainer">
-    <h1 className="title">Tic Tac Toe</h1>
+    <div className="mycontainer1">
+    <h1 className="title1">Tic Tac Toe</h1>
       
       <div className="main">
         <div className="grid">
@@ -171,15 +171,7 @@ export default function TicTacToe() {
           </div>
         </div>
 
-      <div>
-      <button className="reloadbtn" onClick={reloadPage}>
-          Restart
-        </button>
-
-        <button className="reloadbtn" onClick={()=>navigate(-1)}>
-          Back to Home
-        </button>
-      </div>
+     
      
 
         <div>
@@ -193,6 +185,15 @@ export default function TicTacToe() {
         </div>
         
 
+      </div>
+      <div className="mybtn">
+      <button className="reloadbtn" onClick={reloadPage}>
+          Restart
+        </button>
+
+        <button className="reloadbtn" onClick={()=>navigate(-1)}>
+          Back to Home
+        </button>
       </div>
      
     </div>

@@ -16,8 +16,11 @@
     align-items: center;
     justify-content: center;
     display: flex;
-    
 }
+#emoji{
+    font-size: 34px;
+    margin: 0;
+}   
 /* .img{
     height: 45px;
     width: 45px;
@@ -54,6 +57,9 @@
     padding-bottom: 120px;
     padding-top: 50px;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 .winnig{
     display: flex;
@@ -64,3 +70,52 @@
 
 
 /* PopUp */
+
+@media screen and (max-width : 440px){
+    .title{
+       
+        font-size: 26px;
+       
+    }
+    .gridView{
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        align-items: center;
+        row-gap: 25px;
+        margin: 20px;
+        padding: 25px 0;
+        border: 8px solid rgba(0,0,0,0.1);
+        border-radius: 14px;
+        margin-top: 0;
+    }
+    .imgbg{
+        background-color: aqua;
+        height: 35px;
+        width: 35px;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        
+    }
+    .cover{
+        height: 35px;
+        width: 35px;
+    }   
+    #emoji{
+        font-size: 18px;
+    }
+    #main{
+        background-color: rgba(128,128,0,0.5);
+        font-family: 'poppins';
+        padding-bottom: 50px;
+        padding-top: 20px;
+        position: relative;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+    .sct2{
+        margin: 0 25px;
+    }
+}

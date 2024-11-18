@@ -1,0 +1,23 @@
+.wp-block-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    font-size: 0.9em;
+  }
+
+  .wp-block-table th,
+  .wp-block-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+
+  .wp-block-table th {
+    background-color: #3498db;
+    color: #fff;
+    font-weight: bold;
+  }
+
+  .wp-block-table td {
+    background-color: #f4f4f4;
+  }

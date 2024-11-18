@@ -1,0 +1,15 @@
+.iyXkrL{
+    flex-direction: column;
+}
+.scoring{
+    font-size: 28px;
+    font-weight: 500;
+}
+
+@media screen and (max-width:440px){
+    .WzvbX {
+        width: 100%;
+        background-size: 100% 100%;
+    }
+
+}

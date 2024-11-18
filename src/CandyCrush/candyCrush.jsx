@@ -222,6 +222,11 @@ function CandyCrush() {
 
   return (
     <div className="app">
+
+<div className="score-board">
+        <h2> Score : {scoreDisplay}</h2>  <a href={'/leaderboard'}><button className="btn btn-primary">My Score</button></a>
+      </div>
+
       <div className="game">
         {currentColorArrangement.map((candyColor, index) => (
           <img
@@ -239,9 +244,7 @@ function CandyCrush() {
           />
         ))}
       </div>
-      <div className="score-board">
-        <h2> Score : {scoreDisplay}</h2>
-      </div>
+     
       <div>
       <button className="reloadbtn" onClick={()=>window.location.reload()}>
           Restart

@@ -67,14 +67,13 @@ function RockPaperScissor() {
 
       }, 500);
     }
-
   };
 
 
   return (
     <>
       <div className="mycontainer">
-        <div id="rmain">
+      
           <h1>Rock - Paper - Scissor</h1>
           <h4 className="choose">Choose any move</h4>
           <div className="buttons">
@@ -120,7 +119,6 @@ function RockPaperScissor() {
             </Modal.Footer>
           </Modal>
 
-        </div>
           
           <div>
 

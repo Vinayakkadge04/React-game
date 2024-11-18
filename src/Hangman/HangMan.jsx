@@ -92,12 +92,13 @@ function HangMan() {
     <>
       <div className="cont row">
         <h1 id="title">Hangman</h1>
-        <div className="col-3 d-flex flex-column align-items-center justify-content-center">
+        <div className="col-md-3 col-sm-12 d-flex flex-column align-items-center justify-content-center">
           <h5>Lets guess the word🤔</h5>
           <img className="img" src={img} alt="" />
         </div>
 
-        <div className="col-9">
+
+        <div className="col-md-9 col-sm-12">
           <div className="content">
             <div className="word">
               {duplicateArray.map((e) => {
@@ -125,6 +126,7 @@ function HangMan() {
           </div>
         </div>
       </div>
+      <div className="classbtn">
       <button className="reloadbtn" onClick={() => window.location.reload()}>
         Restart
       </button>
@@ -132,6 +134,7 @@ function HangMan() {
       <button className="reloadbtn" onClick={() => navigate(-1)}>
         Back to Home
       </button>
+      </div>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>

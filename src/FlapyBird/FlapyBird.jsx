@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import './flapybird.css'
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 const BIRD_HEIGHT = 28;
 const BIRD_WIDTH = 33;
@@ -9,6 +11,8 @@ const OBJ_WIDTH = 52;
 const OBJ_SPEED = 6;
 const OBJ_GAP = 200;
 function FlapyBird() {
+
+  let navigate = useNavigate();
   const [isStart, setIsStart] = useState(false);
   const [birdpos, setBirspos] = useState(300);
   const [objHeight, setObjHeight] = useState(0);
@@ -65,7 +69,7 @@ function FlapyBird() {
   };
   return (
     <Home onClick={handler}>
-      <span>Score: {score}</span>
+      <span className="scoring">Score: {score}</span>
       <Background height={WALL_HEIGHT} width={WALL_WIDTH}>
         {!isStart ? <Startboard>Click To Start</Startboard> : null}
         <Obj
@@ -89,6 +93,16 @@ function FlapyBird() {
           deg={0}
         />
       </Background>
+
+      <div>
+      <button className="reloadbtn" onClick={()=>window.location.reload()}>
+          Restart
+        </button>
+
+        <button className="reloadbtn" onClick={()=>navigate(-1)}>
+          Back to Home
+        </button>
+      </div>
     </Home>
   );
 }

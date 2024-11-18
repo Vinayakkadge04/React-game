@@ -8,6 +8,7 @@ import memory from '../images/memorygameBanner.webp'
 import flappy from '../images/flappybird.webp'
 import rps from '../images/rockpaperscissor.webp'
 import snake from '../images/snake.webp'
+import block from '../images/breakout.webp'
 
 function HomePage() {
   return (
@@ -38,8 +39,14 @@ function HomePage() {
             <a href={'/snake'}><img className='gameImg' src={snake} alt="" /></a>
           </div>
           <div className='imgDiv'>
-            <a href={'/dotnstar'}><img className='gameImg' src={snake} alt="" /></a>
+            <a href={'/findword'}><img className='gameImg' src={snake} alt="" /></a>
           </div>
+          <div className='imgDiv'>
+            <a href={'/breakout'}><img className='gameImg' src={block} alt="" /></a>
+          </div>
+
+      
+          
 
       </div>
    </div>

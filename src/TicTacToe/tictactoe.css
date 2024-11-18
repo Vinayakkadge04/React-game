@@ -20,7 +20,7 @@ body{
    
     font-family: poppins;
 }
-.title{
+.title1{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,12 +45,29 @@ body{
     margin-left: 20px;
     margin-right: 20px;
 }
-.mycontainer{
+.mycontainer1{
     background-color: rgba(106,13,173,0.9);
     height: 100vh;
     width: 100%;
     display: flex;
-   
-    justify-content: center;
+    justify-content: space-evenly;
     flex-direction: column;
+}
+
+@media screen and (max-width: 440px){
+    .title{
+        
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+    .grid{
+        grid-template-columns: 65px 65px 65px;
+    }
+    .box{
+        height: 60px;
+        font-size: 24px;
+    }
+    .reloadbtn{
+
+    }
 }

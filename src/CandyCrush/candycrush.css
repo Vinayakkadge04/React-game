@@ -5,10 +5,11 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    height: 100vh;
   }
   .game {
-    width: 560px;
-    height: 560px;
+    max-width: 560px;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
   }
@@ -16,4 +17,26 @@
   .game img {
     width: 70px;
     height: 70px;
+  }
+
+  @media screen and (max-width:440px){
+    .game img {
+      width: 30px;
+      height: 30px;
+    }
+
+.app {
+  display: flex;
+  padding: 30px;
+  justify-content: space-evenly;
+  flex-direction: column;
+  align-items: center;
+}
+   
+  }
+
+  .score-board{
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
   }

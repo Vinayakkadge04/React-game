@@ -1,3 +1,4 @@
+
 .sbox{
     height: 65px;
     width: 65px;
@@ -43,6 +44,7 @@
     align-items: center;
     justify-content: center;
     font-weight: 600;
+    padding: 0;
 }
 .cont{
     padding-top: 89px;
@@ -53,4 +55,45 @@
     border-radius: 8px;
     background-color: rgba(0,0,0,0.2);
     margin: 10px;
+}
+
+@media screen and (max-width:440px){
+    .img{
+        width: 40%;
+    }
+    .sbox{
+     height: 25px;
+    width: 25px;
+    font-size: 16px;
+    border: 0.7px solid grey;
+    margin: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    }
+    .content{
+        margin-top: 35px;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .key-button{
+        height: 20px;
+        width: 20px;
+        margin: 5px;
+        font-size: 10px;
+        border: 0.6px solid grey;
+        border-radius: 4px;
+    }
+    .cont{
+       margin: 0;
+    }
+    .reloadbtn{
+        border: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background-color: rgba(0,0,0,0.2);
+    margin: 10px; 
+    font-size: 12px;
+    }
 }

@@ -71,11 +71,20 @@ function MemoryGame() {
         <h1 className="title">Lets Play🥳</h1>
 
         <div className="sct2">
-          <div className="d-flex w-100 justify-content-between">
-            <h2 style={{ paddingLeft: 84 }}>Score : {score}</h2>
-            <Button style={{marginRight:84}} variant="primary mb-2" onClick={() => setModalShow(true)}>
+          <div className="d-flex w-100 ms-5 me-5 mb-5 justify-content-between">
+           <div>
+           <h2 >Score : {score}</h2>
+       
+           </div>
+           <div>
+           <Button variant="primary" onClick={() => setModalShow(true)}>
               Find Rules
             </Button>
+           <a href={'/leaderBoard'}> <button className="btn btn-primary">Find Score</button></a>
+           </div>
+           
+
+           
           </div>
 
           {newArray.length === emojiData.length / 2 ? (
@@ -100,7 +109,7 @@ function MemoryGame() {
                 >
                   <div className="imgbg">
                     {/* <img className="img" src={item.img} /> */}
-                    <p style={{ fontSize: 34 }}>{item.emoji}</p>
+                    <p id="emoji">{item.emoji}</p>
                     <div
                       style={{
                         opacity:
@@ -117,13 +126,15 @@ function MemoryGame() {
             );
           })}
         </div>
-        <button className="reloadbtn" onClick={()=>window.location.reload()}>
+       <div className="ms-5" id="mybtn">
+       <button className="reloadbtn" onClick={()=>window.location.reload()}>
           Restart
         </button>
 
         <button className="reloadbtn" onClick={()=>navigate(-1)}>
           Back to Home
         </button>
+       </div>
       </div>
 
       <PopUpModel show={modalShow} onHide={() => setModalShow(false)} />

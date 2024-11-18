@@ -5,8 +5,7 @@
     width: -webkit-fill-available;
 }
 .gameImg{
-    width: 230px;
-    /* border:2px solid #000; */
+    max-width: 100%;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .imgGrid{
@@ -17,10 +16,25 @@
     align-items: center;
     justify-content: center;
     margin-top: 35px;
-    
+    margin: 20px;
 }
 .imgDiv{
     display: flex;
     align-items: center;
    justify-content: center;
+}
+
+@media screen and (max-width: 440px){
+    .imgGrid{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 20px;
+        row-gap: 20px;
+        align-items: center;
+        justify-content: center;
+        margin-top: 35px;
+    }
+    .gameImg{
+        max-width: 100%;
+    }
 }
