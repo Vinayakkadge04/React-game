@@ -60,6 +60,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    height: 100vh;
 }
 .winnig{
     display: flex;
@@ -67,7 +68,12 @@
     justify-content: center;
     top: 20px;
 }
-
+.memResult{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin: 0 84px;
+}
 
 /* PopUp */
 
@@ -105,17 +111,27 @@
         font-size: 18px;
     }
     #main{
-        background-color: rgba(128,128,0,0.5);
-        font-family: 'poppins';
+        
         padding-bottom: 50px;
         padding-top: 20px;
         position: relative;
-        height: 100vh;
+       
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
+        
     }
     .sct2{
-        margin: 0 25px;
+       display: flex;
+       flex-direction: column;
+       align-items: center;
     }
+    .memResult{
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        padding: 20px;
+        flex-direction: column;
+    }
+    
 }

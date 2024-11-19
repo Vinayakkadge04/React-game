@@ -1,15 +1,11 @@
-.iyXkrL{
-    flex-direction: column;
+.bFASBv h3{
+    color: #fff;
 }
-.scoring{
-    font-size: 28px;
-    font-weight: 500;
-}
-
-@media screen and (max-width:440px){
-    .WzvbX {
-        width: 100%;
-        background-size: 100% 100%;
-    }
-
+.reladbtn{
+    border: none;
+    margin: 8px;
+    padding:8px 20px;
+    border-radius: 12px;
+    color: white;
+    background-color: rgba(0,0,0,0.5);
 }

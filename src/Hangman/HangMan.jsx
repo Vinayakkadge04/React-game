@@ -17,8 +17,9 @@ function HangMan() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow();
   const handleShow = () => setShow(true);
-  const [start , setStart] = useState(false)
-  const [gameOver , setgameOver] = useState(false);
+  const [start, setStart] = useState(false);
+  const [gameOver, setgameOver] = useState(false);
+  let [score, setScore] = useState(0);
 
   const [image, setimage] = useState([
     "https://i.imgur.com/kReMv94.png",
@@ -35,7 +36,6 @@ function HangMan() {
     const random = Math.floor(Math.random() * HangManData.length);
     const myArray = (random, HangManData[random].word).toUpperCase().split("");
     setWordArray(myArray);
-   
   }, []);
 
   useEffect(() => {
@@ -43,14 +43,18 @@ function HangMan() {
   }, [wordArray]);
 
   useEffect(() => {
-    duplicateArray.forEach((item , index) =>{
-      console.log(JSON.stringify(wordArray),"WordArray");
-      console.log(JSON.stringify(duplicateArray),"Duplicate")
-      if(!gameOver && start && JSON.stringify(wordArray) === JSON.stringify(duplicateArray) ){
+    duplicateArray.forEach((item, index) => {
+      console.log(JSON.stringify(wordArray), "WordArray");
+      console.log(JSON.stringify(duplicateArray), "Duplicate");
+      if (
+        !gameOver &&
+        start &&
+        JSON.stringify(wordArray) === JSON.stringify(duplicateArray)
+      ) {
         console.log("Congratulations, You Win!");
-        handleShow()
+        handleShow();
       }
-      })
+    });
   }, [duplicateArray]);
 
   useEffect(() => {
@@ -63,7 +67,7 @@ function HangMan() {
     }
 
     if (wordArray.includes(value, e)) {
-      setStart(true)
+      setStart(true);
       e.target.innerHTML = "✔️";
       e.target.style.backgroundColor = "#39e75f";
       var testArray = [...duplicateArray];
@@ -72,15 +76,17 @@ function HangMan() {
           testArray[index] = value;
           setduplicateArray(testArray);
         }
+        setScore(score + 5);
       });
     } else {
       e.target.innerHTML = "✖️";
       e.target.style.backgroundColor = "#ff474c";
       if (error.length === 5) {
         seterror([...error, ""]);
+ 
         setlock(true);
         console.log("You Lost!!!");
-        setgameOver(true)
+        setgameOver(true);
         setduplicateArray(wordArray);
       } else if (error.length < 6) {
         seterror([...error, ""]);
@@ -94,9 +100,9 @@ function HangMan() {
         <h1 id="title">Hangman</h1>
         <div className="col-md-3 col-sm-12 d-flex flex-column align-items-center justify-content-center">
           <h5>Lets guess the word🤔</h5>
+          <h2>Score : {score}</h2>
           <img className="img" src={img} alt="" />
         </div>
-
 
         <div className="col-md-9 col-sm-12">
           <div className="content">
@@ -127,13 +133,13 @@ function HangMan() {
         </div>
       </div>
       <div className="classbtn">
-      <button className="reloadbtn" onClick={() => window.location.reload()}>
-        Restart
-      </button>
+        <button className="reloadbtn" onClick={() => window.location.reload()}>
+          Restart
+        </button>
 
-      <button className="reloadbtn" onClick={() => navigate(-1)}>
-        Back to Home
-      </button>
+        <button className="reloadbtn" onClick={() => navigate(-1)}>
+          Back to Home
+        </button>
       </div>
 
       <Modal show={show} onHide={handleClose}>
@@ -145,11 +151,8 @@ function HangMan() {
           <Button variant="secondary" onClick={handleClose}>
             Ok
           </Button>
-          
         </Modal.Footer>
       </Modal>
-
-
     </>
   );
 }

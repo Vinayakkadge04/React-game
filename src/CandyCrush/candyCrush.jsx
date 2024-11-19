@@ -20,11 +20,14 @@ const candyColors = [
 ];
 
 function CandyCrush() {
-    let navigate = useNavigate()
+  let navigate = useNavigate();
   const [currentColorArrangement, setCurrentColorArrangement] = useState([]);
   const [squareBeingDragged, setSquareBeingDragged] = useState(null);
   const [squareBeingReplaced, setSquareBeingReplaced] = useState(null);
   const [scoreDisplay, setScoreDisplay] = useState(0);
+  const [min, setMin] = useState(0);
+  const [sec, setSec] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(true);
 
   const checkForColumnOfFour = () => {
     for (let i = 0; i <= 39; i++) {
@@ -220,14 +223,45 @@ function CandyCrush() {
     currentColorArrangement,
   ]);
 
+  useEffect(() => {
+    let timer;
+    if (isTimerRunning) {
+      timer = setInterval(() => {
+        setSec((prevSec) => {
+          if (prevSec === 59) {
+            setMin((prevMin) => prevMin + 1);
+            return 0;
+          }
+          return prevSec + 1;
+        });
+      }, 1000);
+    }
+
+    return () => clearInterval(timer); // Cleanup on unmount
+  }, [isTimerRunning]);
+
   return (
-    <div className="app">
+    <div className="app row">
+      
+      <div className="col-lg-2 col-sm-12 score-board">
+        <h3>
+          Timer : {String(min).padStart(2, "0")}:{String(sec).padStart(2, "0")}
+        </h3>
+        <h2> Score : {scoreDisplay}</h2>{" "}
+        <a href={"/leaderboard"}>
+          <button className="btn btn-primary">My Score</button>
+        </a>
+        <div>
+        <button className="reloadbtn" onClick={() => window.location.reload()}>
+          Restart
+        </button>
 
-<div className="score-board">
-        <h2> Score : {scoreDisplay}</h2>  <a href={'/leaderboard'}><button className="btn btn-primary">My Score</button></a>
+        <button className="reloadbtn" onClick={() => navigate(-1)}>
+          Back to Home
+        </button>
       </div>
-
-      <div className="game">
+      </div>
+      <div className="col-lg-9 col-sm-12 game">
         {currentColorArrangement.map((candyColor, index) => (
           <img
             key={index}
@@ -244,16 +278,10 @@ function CandyCrush() {
           />
         ))}
       </div>
+      
      
-      <div>
-      <button className="reloadbtn" onClick={()=>window.location.reload()}>
-          Restart
-        </button>
 
-        <button className="reloadbtn" onClick={()=>navigate(-1)}>
-          Back to Home
-        </button>
-      </div>
+   
     </div>
   );
 }

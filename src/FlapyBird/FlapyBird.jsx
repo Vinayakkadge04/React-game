@@ -11,13 +11,20 @@ const OBJ_WIDTH = 52;
 const OBJ_SPEED = 6;
 const OBJ_GAP = 200;
 function FlapyBird() {
-
   let navigate = useNavigate();
   const [isStart, setIsStart] = useState(false);
   const [birdpos, setBirspos] = useState(300);
   const [objHeight, setObjHeight] = useState(0);
   const [objPos, setObjPos] = useState(WALL_WIDTH);
   const [score, setScore] = useState(0);
+  const [min, setMin] = useState(0);
+  const [sec, setSec] = useState(0);
+
+  const [resmin, setresMin] = useState(0);
+  const [ressec, setresSec] = useState(0);
+
+  const [res , setres] = useState(0)
+  const [isTimerRunning, setIsTimerRunning] = useState(true);
   useEffect(() => {
     let intVal;
     if (isStart && birdpos < WALL_HEIGHT - BIRD_HEIGHT) {
@@ -27,6 +34,25 @@ function FlapyBird() {
     }
     return () => clearInterval(intVal);
   });
+
+useEffect(()=>{
+  if(isStart){
+    let timer;
+    if (isTimerRunning) {
+      timer = setInterval(() => {
+        setSec((prevSec) => {
+          if (prevSec === 59) {
+            setMin((prevMin) => prevMin + 1);
+            return 0;
+          }
+          return prevSec + 1;
+        });
+      }, 1000);
+    }
+
+    return () => clearInterval(timer);
+  }
+},[isStart])
 
   useEffect(() => {
     let objval;
@@ -58,18 +84,24 @@ function FlapyBird() {
       (topObj || bottomObj)
     ) {
       setIsStart(false);
+     
       setBirspos(300);
       setScore(0);
     }
   }, [isStart, birdpos, objHeight, objPos]);
   const handler = () => {
-    if (!isStart) setIsStart(true);
+    if (!isStart){ setIsStart(true);
+      setMin(0);
+      setSec(0);
+    }
+   
     else if (birdpos < BIRD_HEIGHT) setBirspos(0);
     else setBirspos((birdpos) => birdpos - 50);
   };
   return (
     <Home onClick={handler}>
-      <span className="scoring">Score: {score}</span>
+      {/* <span className="scoring">Score : {score}</span> */}
+      <h3>Time :  {String(min).padStart(2, "0")}:{String(sec).padStart(2, "0")}</h3>
       <Background height={WALL_HEIGHT} width={WALL_WIDTH}>
         {!isStart ? <Startboard>Click To Start</Startboard> : null}
         <Obj
@@ -95,11 +127,11 @@ function FlapyBird() {
       </Background>
 
       <div>
-      <button className="reloadbtn" onClick={()=>window.location.reload()}>
+      <button className="reladbtn" onClick={()=>window.location.reload()}>
           Restart
         </button>
 
-        <button className="reloadbtn" onClick={()=>navigate(-1)}>
+        <button className="reladbtn" onClick={()=>navigate(-1)}>
           Back to Home
         </button>
       </div>
@@ -114,6 +146,9 @@ const Home = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background: linear-gradient(to right, #6a11cb, #2575fc); /* Gradient background */
+  overflow: hidden;
+  flex-direction:column;
 `;
 const Background = styled.div`
   background-image: url("../images/background-day.png");
@@ -122,8 +157,13 @@ const Background = styled.div`
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;
   position: relative;
-  overflow: hidden;
-  border: 2px solid black;
+  overflow:hidden;
+   border: 5px solid #ffffff; 
+  border-radius: 20px; 
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  @media screen and (max-width:440px){
+    width:340px
+  }
 `;
 
 const Bird = styled.div`
@@ -148,21 +188,29 @@ const Obj = styled.div`
 `;
 
 const Startboard = styled.div`
-  position: relative;
+   position: relative;
   top: 49%;
-  background-color: black;
-  padding: 10px;
-  width: 100px;
+  background-color: #1e1e1e;
+  padding: 15px 20px;
+  width: 120px;
   left: 50%;
-  margin-left: -50px;
+  margin-left: -60px;
   text-align: center;
-  font-size: 20px;
+  font-size: 24px;
   border-radius: 10px;
-  color: #fff;
-  font-weight: 600;
+  color: #ffcc00; 
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Strong shadow for emphasis */
+  text-transform: uppercase;
+  transition: transform 0.3s ease-in-out;
+  
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 const ScoreShow = styled.div`
   text-align: center;
   background: transparent;
 `;
+

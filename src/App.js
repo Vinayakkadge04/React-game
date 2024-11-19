@@ -8,7 +8,7 @@ import HomePage from "./HomePage/HomePage";
 import MemoryGame from "./MemoryGame/MemoryGame";
 import RockPaperScissor from "./RockPaperScissor/RockPaperScissor";
 import SnakeGame from "./SnakeGame/SnakeGame";
-import { FindWord } from "./WordSearch/pages/Home/Home";
+// import { FindWord } from "./WordSearch/pages/Home/Home";
 import BreakOutGame from "./Break-Out-Game/BreakOutGame";
 import Layout from "./Layout";
 import Login from "./login/login";
@@ -21,19 +21,20 @@ export default function App() {
       <BrowserRouter>
           <Routes>
             <Route path="/" element={<Layout/>}/>
-            <Route index  element={<Login/>} />
-            <Route path='/register' element={<Register/>}/>
-            <Route path="/home" element={<HomePage/>}/>
+            {/* <Route index  element={<Login/>} />
+            <Route path='/register' element={<Register/>}/> */}
+            <Route path="/" index element={<HomePage/>}/>
             <Route path="tictactoe" element={<TicTacToe/>}/>
             <Route path="/hangman" element={<HangMan/>}/>
             <Route path='/flapybird' element={<FlapyBird/>}/>
             <Route path='/candycrush' element={<CandyCrush/>}/>
             <Route path="/memory" element={<MemoryGame/>}/>
             <Route path ="/rps" element={<RockPaperScissor/>}/>
-            <Route path ='/snake' element={<SnakeGame/>}/>
-            <Route path="/findword" element={<FindWord/>}/>
+            <Route path="/snake" element={<SnakeGame/>}/>
+            {/* <Route path="/findword" element={<FindWord/>}/> */}
             <Route path="/breakout" element={<BreakOutGame/>}/>
             <Route path="/leaderBoard" element={<LeaderBoard/>}/>
+          
           </Routes>
       </BrowserRouter>
     </>

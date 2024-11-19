@@ -8,11 +8,16 @@ import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 function MemoryGame() {
-  let navigate= useNavigate();
+  let navigate = useNavigate();
   const [modalShow, setModalShow] = React.useState(false);
   let [emojiNewArray, setemojiNewArray] = useState([]);
-
-// taken code from Google
+  const [sec, setSec] = useState(0);
+  const [min, setMin] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(true);
+  let [myArray, setmyArray] = useState([]);
+  let [newArray, setnewArray] = useState([]);
+  var [score, setScore] = useState(0);
+  // taken code from Google
 
   function printArray(arr) {
     let ans = "";
@@ -27,21 +32,42 @@ function MemoryGame() {
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
   }
+
+  useEffect(() => {
+    let timer;
+    if (isTimerRunning) {
+      timer = setInterval(() => {
+        setSec((prevSec) => {
+          if (prevSec === 59) {
+            setMin((prevMin) => prevMin + 1);
+            return 0;
+          }
+          return prevSec + 1;
+        });
+      }, 1000);
+    }
+
+    return () => clearInterval(timer); // Cleanup on unmount
+  }, [isTimerRunning]);
+
   useEffect(() => {
     randomize(emojiData);
     printArray(emojiData);
   }, [emojiData]);
 
-  let [myArray, setmyArray] = useState([]);
-  let [newArray, setnewArray] = useState([]);
-  var [score, setScore] = useState(0);
 
   const getId = (id) => {
     console.log(id);
-    if (myArray.length < 2) {
+    if (myArray.length < 2 && (myArray.length === 0 || myArray[0] !== id)) {
       setmyArray((item) => [...item, id]);
     }
   };
+
+  useEffect(() => {
+    if (newArray.length === emojiData.length / 2) {
+      setIsTimerRunning(false);
+    }
+  }, [newArray]);
 
   useEffect(() => {
     if (myArray.length === 2) {
@@ -71,27 +97,31 @@ function MemoryGame() {
         <h1 className="title">Lets Play🥳</h1>
 
         <div className="sct2">
-          <div className="d-flex w-100 ms-5 me-5 mb-5 justify-content-between">
-           <div>
-           <h2 >Score : {score}</h2>
-       
-           </div>
-           <div>
-           <Button variant="primary" onClick={() => setModalShow(true)}>
-              Find Rules
-            </Button>
-           <a href={'/leaderBoard'}> <button className="btn btn-primary">Find Score</button></a>
-           </div>
-           
+          <div className="memResult">
+            <div>
+              <h2>Score : {score}</h2>
+              <h2>
+                {" "}
+                Timer : {String(min).padStart(2, "0")}:
+                {String(sec).padStart(2, "0")}
+              </h2>
+            </div>
 
-           
+            <div>
+              <Button variant="primary" onClick={() => setModalShow(true)}>
+              🤔 Need Help?
+              </Button>
+              <a href={"/leaderBoard"}>
+                {" "}
+                <button className="btn btn-primary">Your Score</button>
+              </a>
+            </div>
           </div>
-
           {newArray.length === emojiData.length / 2 ? (
             <>
               <div className="winnig">
-                <h1>You Won!!!</h1>
-                <img src={win} />
+                <h1>Game Over!!!</h1>
+               
               </div>
             </>
           ) : null}
@@ -126,15 +156,18 @@ function MemoryGame() {
             );
           })}
         </div>
-       <div className="ms-5" id="mybtn">
-       <button className="reloadbtn" onClick={()=>window.location.reload()}>
-          Restart
-        </button>
+        <div className="ms-5" id="mybtn">
+          <button
+            className="reloadbtn"
+            onClick={() => window.location.reload()}
+          >
+            Restart
+          </button>
 
-        <button className="reloadbtn" onClick={()=>navigate(-1)}>
-          Back to Home
-        </button>
-       </div>
+          <button className="reloadbtn" onClick={() => navigate(-1)}>
+            Back to Home
+          </button>
+        </div>
       </div>
 
       <PopUpModel show={modalShow} onHide={() => setModalShow(false)} />

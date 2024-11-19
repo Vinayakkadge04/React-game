@@ -1,9 +1,0 @@
-.gameCanvas{
-    background-color: #fafafa;
-    border: 3px solid #000;
-}
-.snakeGame{
-    display: flex;
-    align-items: center;
-    justify-content: center
-}

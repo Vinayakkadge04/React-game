@@ -38,11 +38,15 @@ function HomePage() {
           <div className='imgDiv'>
             <a href={'/snake'}><img className='gameImg' src={snake} alt="" /></a>
           </div>
-          <div className='imgDiv'>
+          {/* <div className='imgDiv'>
             <a href={'/findword'}><img className='gameImg' src={snake} alt="" /></a>
-          </div>
+          </div> */}
           <div className='imgDiv'>
             <a href={'/breakout'}><img className='gameImg' src={block} alt="" /></a>
+          </div>
+
+          <div className='imgDiv'>
+            <a href={'/snakegame'}><img className='gameImg' src={block} alt="" /></a>
           </div>
 
       
