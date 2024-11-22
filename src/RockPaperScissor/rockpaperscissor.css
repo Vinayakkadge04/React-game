@@ -67,7 +67,12 @@
     }
 } */
 
+.sdfbs{
+  height: 100vh;
+  display: flex;
+  align-items: center;
 
+}
 .mycontainer {
     text-align: center;
     font-family: 'Roboto', sans-serif;
@@ -77,6 +82,7 @@
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
     max-width: 600px;
     margin: auto;
+   margin-top: 90px;
   }
   
   h1 {

@@ -72,8 +72,8 @@ function RockPaperScissor() {
 
   return (
     <>
+    <div className="sdfbs">
       <div className="mycontainer">
-      
           <h1>Rock - Paper - Scissor</h1>
           <h4 className="choose">Choose any move</h4>
           <div className="buttons">
@@ -126,14 +126,18 @@ function RockPaperScissor() {
           Restart
         </button>
 
-        <button className="reloadbtn" onClick={()=>navigate(-1)}>
+            <a href={'/'}>
+            <button className="reloadbtn">
           Back to Home
         </button>
+            </a>
+      
 
           </div>
         
 
         <p className="result">Won = {win} || Lost = {lose} || Draw = {draw}</p>
+      </div>
       </div>
     </>
   );

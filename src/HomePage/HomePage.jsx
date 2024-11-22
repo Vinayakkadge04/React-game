@@ -45,9 +45,6 @@ function HomePage() {
             <a href={'/breakout'}><img className='gameImg' src={block} alt="" /></a>
           </div>
 
-          <div className='imgDiv'>
-            <a href={'/snakegame'}><img className='gameImg' src={block} alt="" /></a>
-          </div>
 
       
           

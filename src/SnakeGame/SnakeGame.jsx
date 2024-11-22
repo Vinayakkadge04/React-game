@@ -112,7 +112,8 @@ const App = () => {
 
   return (
     <div className="snake_App">
-      <h1>React Snake Game</h1>
+      <h1>Hungry Snake</h1>
+      <p> Score : 🚀 {score}</p>
       <div className="game-board">
         {Array.from({ length: ROWS }).map((_, rowIndex) => (
           <div key={rowIndex} className="snakerow">
@@ -135,8 +136,8 @@ const App = () => {
         </div>
       )}
       <div className='control'>
-        <button onClick={() => { setIsPause(!isPause) }}> {isPause ? 'Resume' : 'Pause'}</button>
-        <p> Score : 🚀 {score}</p>
+      
+       
         <div className='button'>
           <button className="up" onClick={() => setDirection('UP')} >↑</button><br />
           <button className="left" onClick={() => setDirection('LEFT')} >←</button>

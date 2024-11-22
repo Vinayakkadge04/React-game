@@ -77,9 +77,7 @@ button:hover {
 }
 
 @media (max-width: 800px) {
-  .control {
-    transform: translate(50%,140%);
-  }
+
 }
 
 
@@ -104,4 +102,28 @@ button:hover {
   position: fixed;
   top: 20%;
   left: 5%;
+}
+
+@media screen and (max-width:440px){
+  .snake_App h1{
+    font-size: 38px;
+    padding: 4px;
+  }
+  .game-board{
+    width: 100%;
+  }
+  .control{
+    position: static;
+
+  }
+  .button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .button button{
+    width: fit-content;
+    min-width: 50px;
+
+  }
 }
