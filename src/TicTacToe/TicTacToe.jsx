@@ -1,203 +1,140 @@
-import React, { useEffect, useState } from "react";
-import "./tictactoe.css";
-import { useNavigate } from "react-router-dom";
 
-export default function TicTacToe() {
-  let navigate = useNavigate();
-  const [data, setdata] = useState(["", "", "", "", "", "", "", "", ""]);
-  var [count, setcount] = useState(0);
-  const [end, setEnd] = useState(false);
-  const [random, setrandom] = useState();
-  const [winner, setWinner] = useState("");
+import Board from './component/Board';
+import Square from './component/Square';
+import './tictactoe.css'
+import {useState, useEffect} from 'react'
 
-  const insertData = (num) => {
-    if (end) {
-      return null;
-    }
-    if (data[num] === "") {
-      if (count % 2 === 1) {
-        data[num] = "x";
-        setcount(++count);
-        checkWinng();
-        setTimeout(() => {
-          setRandomValue();
-        }, 500);
-      } else {
-        data[num] = "o";
-        setcount(++count);
-        checkWinng();
-      }
-    }
-    console.log(data);
-  };
+const defaultSquares = () => (new Array(9)).fill(null);
 
-  const setRandomValue = () => {
-  
-      const ran = Math.floor(Math.random() * data.length);
-      if (data[ran] === "") {
-        setrandom(ran);
-      } else {
-        if (
-          data[0] === "" ||
-          data[1] === "" ||
-          data[2] === "" ||
-          data[3] === "" ||
-          data[4] === "" ||
-          data[5] === "" ||
-          data[6] === "" ||
-          data[7] === "" ||
-          data[8] === ""
-        ) {
-          setRandomValue();
-        } else return 0;
-      }
-    
-  };
+const lines = [
+  [0,1,2], [3,4,5], [6,7,8],
+  [0,3,6], [1,4,7], [2,5,8],
+  [0,4,8], [2,4,6],
+];
 
-  const reloadPage = () => {
-    window.location.reload();
-  };
+function TicTacToe() {
+  const [squares, setSquares] = useState(defaultSquares());
+  const [winner,setWinner] = useState(null);
+  const [winsLossesDraws,setwinsLossesDraws] = useState({wins:0,losses:0,draws:0})
 
+  let isPlayerWon = false;
   useEffect(() => {
-    if (data[random] === "") {
-      console.log("My", random, "Random Position");
-      insertData(random);
-    } else {
-      setRandomValue();
-    }
-  }, [random]);
+    const linesThatAre = (a,b,c) => {
+      return lines.filter(squareIndexes => {
+        const squareValues = squareIndexes.map(index => squares[index]);
+        return JSON.stringify([a,b,c].sort()) === JSON.stringify(squareValues.sort());
+      });
+    };
+    const emptyIndexes = squares
+      .map((square,index)=>square === null ? index : null)
+      .filter(val => val !== null);
+    const playerWon = linesThatAre('x','x','x').length > 0;
+    const computerWon = linesThatAre('o','o','o').length > 0;
 
-  const checkWinng = () => {
-    console.log("hello");
-    if (
-      (data[2] !== "" && data[0] === data[1] && data[1] === data[2]) ||
-      (data[8] !== "" && data[0] === data[4] && data[4] === data[8]) ||
-      (data[6] !== "" && data[0] === data[3] && data[3] === data[6]) ||
-      (data[7] !== "" && data[1] === data[4] && data[4] === data[7]) ||
-      (data[5] !== "" && data[3] === data[4] && data[4] === data[5]) ||
-      (data[8] !== "" && data[6] === data[7] && data[7] === data[8]) ||
-      (data[6] !== "" && data[2] === data[4] && data[4] === data[6]) ||
-      (data[8] !== "" && data[2] === data[5] && data[5] === data[8])
-    ) {
-      console.log("You Won");
-      setEnd(true);
-      (data[2] === "x" && data[0] === data[1] && data[1] === data[2]) ||
-      (data[8] === "x" && data[0] === data[4] && data[4] === data[8]) ||
-      (data[6] === "x" && data[0] === data[3] && data[3] === data[6]) ||
-      (data[7] === "x" && data[1] === data[4] && data[4] === data[7]) ||
-      (data[5] === "x" && data[3] === data[4] && data[4] === data[5]) ||
-      (data[8] === "x" && data[6] === data[7] && data[7] === data[8]) ||
-      (data[6] === "x" && data[2] === data[4] && data[4] === data[6]) ||
-      (data[8] === "x" && data[2] === data[5] && data[5] === data[8])
-        ? setWinner("x")
-        : setWinner("o");
-    } else if (!data.includes("") && winner === "") {
-      setWinner("d");
-      console.log("match Draw!!!");
+    if (playerWon) {
+      setWinner('x');
+      setwinsLossesDraws(winsLossesDraws => {return {...winsLossesDraws, wins: winsLossesDraws.wins + 1}});
+      isPlayerWon = true;
     }
-  };
+    else if (computerWon){
+      setWinner('o');
+      setwinsLossesDraws(winsLossesDraws => {return {...winsLossesDraws, losses: winsLossesDraws.losses + 1}});
+    }
+    else if (emptyIndexes.length === 1){
+      setWinner('draw');
+      setwinsLossesDraws(winsLossesDraws => {return {...winsLossesDraws, draws: winsLossesDraws.draws + 1}});
+    }
+
+    const putComputerAt =index => {
+      setSquares(prevSquare => {
+        let newSquares = [...prevSquare];
+        newSquares[index] = 'o';
+        return newSquares;
+      });
+    };
+
+    const isComputerTurn = squares.filter(square => square !== null).length % 2 === 1;
+    if(isComputerTurn && isPlayerWon === false){
+
+      // COMPUTER PUT 'O' TO WIN THE GAME //
+      const winningLines = linesThatAre('o','o',null);
+      if (winningLines.length > 0) {
+        const winIndex = winningLines[0].filter(index => squares[index] === null)[0];
+        putComputerAt(winIndex);
+        return;
+      }
+
+      // COMPUTER PUT 'O' TO BLOCK THE PLAYER //
+      const linesToBlock = linesThatAre('x','x',null);
+      if (linesToBlock.length > 0){
+        const blockIndex = linesToBlock[0].filter(index => squares[index] === null)[0];
+        putComputerAt(blockIndex);
+        return;
+      }
+
+      // COMPUTER PUT 'O' TO INCREASE THE CHANCE OF WINNING THE GAME //
+      const linesToContinue = linesThatAre('o',null,null);
+      if (linesToContinue.length > 0){
+        putComputerAt(linesToContinue[0].filter(index => squares[index] === null)[0]);
+        return;
+      }
+
+      // COMPUTER PUT 'O' TO A RANDOM PLAYER WHEN GAME BEGINS (only executing when it is computer's first put) //
+      const randomIndex = emptyIndexes[Math.ceil(Math.random()*emptyIndexes.length)]
+      if (emptyIndexes.length > 0){
+        putComputerAt(randomIndex);
+      }
+    }
+
+  },[squares]);
+  
+  function handleSquareClick(index) {
+      const isPlayerTurn = squares.filter(square => square !== null).length % 2 === 0;
+      if (isPlayerTurn && winner === null) {
+        const newSquares = squares;
+        newSquares[index] = 'x'
+        setSquares([...newSquares]);
+      }
+  }
+
+  const resetBoard = () => {
+      setSquares(new Array(9).fill(null));
+      setWinner(null);
+  }
 
   return (
-    <>
-      <div className="mycontainer1">
-        <h1 className="title1">Tic Tac Toe</h1>
-        
-        <div className="main">
-          <div className="grid">
-            <div
-              className="box"
-              onClick={() => {
-                insertData(0);
-              }}
-            >
-              {data[0] === "x" ? "❌" : data[0] === "o" ? "⭕️" : ""}
-            </div>
-            <div
-              className="box"
-              onClick={() => {
-                insertData(1);
-              }}
-            >
-              {data[1] === "x" ? "❌" : data[1] === "o" ? "⭕️" : ""}
-            </div>
-            <div
-              className="box"
-              onClick={() => {
-                insertData(2);
-              }}
-            >
-              {data[2] === "x" ? "❌" : data[2] === "o" ? "⭕️" : ""}
-            </div>
-            <div
-              className="box"
-              onClick={() => {
-                insertData(3);
-              }}
-            >
-              {data[3] === "x" ? "❌" : data[3] === "o" ? "⭕️" : ""}
-            </div>
-            <div
-              className="box"
-              onClick={() => {
-                insertData(4);
-              }}
-            >
-              {data[4] === "x" ? "❌" : data[4] === "o" ? "⭕️" : ""}
-            </div>
-            <div
-              className="box"
-              onClick={() => {
-                insertData(5);
-              }}
-            >
-              {data[5] === "x" ? "❌" : data[5] === "o" ? "⭕️" : ""}
-            </div>
-            <div
-              className="box"
-              onClick={() => {
-                insertData(6);
-              }}
-            >
-              {data[6] === "x" ? "❌" : data[6] === "o" ? "⭕️" : ""}
-            </div>
-            <div
-              className="box"
-              onClick={() => {
-                insertData(7);
-              }}
-            >
-              {data[7] === "x" ? "❌" : data[7] === "o" ? "⭕️" : ""}
-            </div>
-            <div
-              className="box"
-              onClick={() => {
-                insertData(8);
-              }}
-            >
-              {data[8] === "x" ? "❌" : data[8] === "o" ? "⭕️" : ""}
-            </div>
-          </div>
-
-          <div>
-            {winner === "x" ? (
-              <h1>You Won!!! 🏆</h1>
-            ) : winner === "o" ? (
-              <h1>Computer Won</h1>
-            ) : winner === "d" ? (
-              <h1>Match Draw</h1>
-            ) : null}
-          </div>
+   <div className="ticbody">
+     <main className='ticmain'>
+      <h1>Tic Tac Toe</h1>
+      <Board>
+        {squares.map((square,index) => 
+        <Square 
+          x = {square==='x'?1:0}
+          o = {square==='o'?1:0}
+          onClick={() => handleSquareClick(index)} />)}
+      </Board>
+      <h3>Wins: {winsLossesDraws.wins} Losses: {winsLossesDraws.losses} Draws: {winsLossesDraws.draws}</h3>
+      {!!winner && winner === 'x' && (
+        <div className="result green">
+          You WON!
+          <button onClick={resetBoard}>Reset</button>
         </div>
-        <div className="mybtn">
-          <button className="reloadbtn" onClick={reloadPage}>
-            Restart
-          </button>
-
-          <button className="reloadbtn" onClick={() => navigate(-1)}>
-            Back to Home
-          </button>
+      )}
+      {!!winner && winner === 'o' && (
+        <div className="result red">
+          You LOST!
+          <button onClick={resetBoard}>Reset</button>
         </div>
-      </div>
-    </>
+      )}
+      {!!winner && winner === 'draw' && (
+        <div className="result gray">
+          It's a DRAW!
+          <button onClick={resetBoard}>Reset</button>
+        </div>
+      )}
+    </main>
+   </div>
   );
 }
+
+export default TicTacToe;
