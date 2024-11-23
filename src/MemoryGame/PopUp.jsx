@@ -38,7 +38,7 @@ export default function PopUpModel(props) {
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Game Rules</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="rules">
         <p>
           1 . The goal is to match all pairs of cards by remembering their
           positions. <br />

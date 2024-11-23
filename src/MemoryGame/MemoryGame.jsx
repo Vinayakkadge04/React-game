@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import { emojiData } from "../Data/emojidata";
 import win from "../images/win.png";
 import "./memorygame.css";
@@ -100,33 +99,14 @@ function MemoryGame() {
           <div className="memResult">
             <div>
               <h2>Score : {score}</h2>
-              <h2>
+              <h2 style={{width:"180px"}}>
                 {" "}
                 Timer : {String(min).padStart(2, "0")}:
                 {String(sec).padStart(2, "0")}
               </h2>
             </div>
 
-            <div>
-              <Button variant="primary" onClick={() => setModalShow(true)}>
-              🤔 Need Help?
-              </Button>
-              <a href={"/leaderBoard"}>
-                {" "}
-                <button className="btn btn-primary">Your Score</button>
-              </a>
-            </div>
-          </div>
-          {newArray.length === emojiData.length / 2 ? (
-            <>
-              <div className="winnig">
-                <h1>Game Over!!!</h1>
-               
-              </div>
-            </>
-          ) : null}
-        </div>
-        <div className="gridView">
+            <div className="gridView">
           {emojiNewArray.map((item, index) => {
             return (
               <>
@@ -156,7 +136,29 @@ function MemoryGame() {
             );
           })}
         </div>
-        <div className="ms-5" id="mybtn">
+
+            <div>
+              <Button variant="primary" onClick={() => setModalShow(true)}>
+              🤔 Need Help?
+              </Button>
+              <a href={"/leaderBoard"}>
+                {" "}
+                <button className="btn btn-primary">Your Score</button>
+              </a>
+            </div>
+          </div>
+          </div>
+          {newArray.length === emojiData.length / 2 ? (
+            <>
+              <div className="winnig">
+                <h1>Game Over!!!</h1>
+               
+              </div>
+            </>
+          ) : null}
+
+        
+        <div id="mybtn">
           <button
             className="reloadbtn"
             onClick={() => window.location.reload()}

@@ -76,6 +76,6 @@ a {
 
 @media screen and (max-width:440px){
   #canvas{
-    
+      height: 100%;
   }
 }

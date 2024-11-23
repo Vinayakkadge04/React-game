@@ -15,7 +15,6 @@ let { ballObj, paddleProps, brickObj, player } = data;
 
 export default function Board() {
   const canvasRef = useRef(null);
-
   useEffect(() => {
     const render = () => {
       const canvas = canvasRef.current;
@@ -52,10 +51,9 @@ export default function Board() {
         ResetBall(ballObj, canvas, paddleProps);
         bricks.length = 0;
       }
-      // Ball and Wall Collision
+     
       WallCollision(ballObj, canvas, player, paddleProps);
 
-      // Brick Collision
       let brickCollision;
 
       for (let i = 0; i < bricks.length; i++) {
@@ -86,7 +84,7 @@ export default function Board() {
   return (
     <div style={{ textAlign: "center" }}>
       <canvas
-        style={{border:"5px solid #000"}}
+        style={{border:"5px solid #666", background:"#000"}}
         id="canvas"
         ref={canvasRef}
         onMouseMove={(event) =>
@@ -96,13 +94,15 @@ export default function Board() {
           paddleProps.width / 2 -
           10)
         }
-        height="500"
+        height='500px'
         width={
           window.innerWidth < 900
             ? window.innerWidth - 20
             : window.innerWidth - (window.innerWidth * 20) / 100
         }
       />
+
+      
     </div>
   );
 }
