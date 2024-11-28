@@ -15,7 +15,7 @@
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
     max-width: 600px;
     margin: auto;
-   margin-top: 90px;
+   margin-top: 45px;
   }
   
   .sdfbs h1 {
@@ -146,4 +146,10 @@
   button:active {
     background-color: #1565c0;
   }
-  
+  .rpcReloadbtn{
+    background-color: #ff5722;
+    margin: 4px;
+  }
+  .rpcReloadbtn:hover{
+    background-color: #e64a19;
+  }

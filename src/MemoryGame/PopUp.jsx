@@ -1,28 +1,4 @@
-// import React,{useState} from "react";
-// import "./memorygame.css";
 
-// function PopUp() {
-//   const [popUp , setpopUp] = useState(true);
-//   return (
-//     <>
-//       <div className="popupmain">
-//         <div className="pop-up">
-//           1. The goal is to match all pairs of cards by remembering their positions.  <br />
-//           2. A grid of cards is displayed face-down. Each card has a matching pair. <br />
-//           3. The player taps two cards per turn. If the two cards match, they remain face-up; if not, they flip back over. <br />
-//           4. Players can only flip two cards at a time. They should try to memorize the cards' positions after each flip. <br />
-//           5. When a player finds a match, the cards stay visible. <br />
-//           6. The game ends when all pairs are matched. The player wins when all cards are face-up. <br />
-//           7. Fewer turns or faster time may result in a higher score, depending on the scoring system. <br />
-
-//           <button className="popUp_btn">Ok</button>
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
-
-// export default PopUp;
 
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";

@@ -103,6 +103,11 @@ button:hover {
   top: 20%;
   left: 5%;
 }
+.navigation{
+  position: fixed;
+  top: 20%;
+  right: 5%;
+}
 
 @media screen and (max-width:440px){
   .snake_App h1{

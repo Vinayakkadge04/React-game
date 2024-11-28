@@ -7,7 +7,6 @@ function BreakOutGame() {
   return (
     <Layout>
       <BreakOut/>
-      
     </Layout>
   )
 }

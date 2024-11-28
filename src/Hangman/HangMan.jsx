@@ -4,8 +4,12 @@ import { keyboardData } from "../Data/keyboardBtn";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-
+import { useLocation } from "react-router-dom";
+import NamePopUp from "../name_pop";
 import "./hangman.css";
+import { useSelector } from "react-redux";
+import { URL } from "../utils/constants";
+import axios from "axios";
 
 function HangMan() {
   let navigate = useNavigate();
@@ -20,17 +24,26 @@ function HangMan() {
   const [start, setStart] = useState(false);
   const [gameOver, setgameOver] = useState(false);
   let [score, setScore] = useState(0);
+  const location = useLocation()
+  const [modalShow, setModalShow] = React.useState(true);
+  const [winner , setwinner]= useState();
+  const {user,nameEntered,id} = useSelector((state)=>state.user)
 
   const [image, setimage] = useState([
     "https://i.imgur.com/kReMv94.png",
     "https://i.imgur.com/UFP8RM4.png",
     "https://i.imgur.com/9McnEXg.png",
-    // "https://i.imgur.com/vNAW0pa.png",
     "https://i.imgur.com/8UFWc9q.png",
     "https://i.imgur.com/rHCgIvU.png",
     "https://i.imgur.com/CtvIEMS.png",
     "https://i.imgur.com/Z2mPdX0.png",
   ]);
+
+
+  useEffect(() => {
+    setModalShow(!nameEntered);
+  }, [nameEntered]);
+
 
   useEffect(() => {
     const random = Math.floor(Math.random() * HangManData.length);
@@ -44,8 +57,6 @@ function HangMan() {
 
   useEffect(() => {
     duplicateArray.forEach((item, index) => {
-      console.log(JSON.stringify(wordArray), "WordArray");
-      console.log(JSON.stringify(duplicateArray), "Duplicate");
       if (
         !gameOver &&
         start &&
@@ -53,13 +64,46 @@ function HangMan() {
       ) {
         console.log("Congratulations, You Win!");
         handleShow();
+        InsertScore();
+       
       }
     });
+
   }, [duplicateArray]);
+
 
   useEffect(() => {
     setimg(image[error.length]);
   }, [error]);
+
+
+  const InsertScore = async() =>{
+    console.log("Hello", "score",score,
+          "gameId",location.state,
+          "userId",id)
+    try{
+      const url = URL+'leaderboard'
+      const res = await axios({
+        method:"post",
+        url:url,
+        data:{
+          "score":score,
+          "gameId":location.state.id,
+          "userId":id
+        }
+      });
+      if(res.data.status === "success"){
+        console.log(res.data,"Data");
+      }
+    }catch(error){
+      console.log(error,"Error")
+    }
+  }
+
+  useEffect(()=>{
+    console.log(location.state,"State")
+  })
+
 
   const checkSimilarity = (value, e) => {
     if (lock) {
@@ -83,9 +127,9 @@ function HangMan() {
       e.target.style.backgroundColor = "#ff474c";
       if (error.length === 5) {
         seterror([...error, ""]);
- 
         setlock(true);
         console.log("You Lost!!!");
+        InsertScore();
         setgameOver(true);
         setduplicateArray(wordArray);
       } else if (error.length < 6) {
@@ -94,17 +138,54 @@ function HangMan() {
     }
   };
 
+  const reloadGame = () => {
+ 
+    setWordArray([]);
+    setduplicateArray([]);
+    seterror([]);
+    setlock(false);
+    setimg(image[0]); 
+    setShow(false);
+    setStart(false);
+    setgameOver(false);
+    setScore(0);
+  
+    const random = Math.floor(Math.random() * HangManData.length);
+    const newWordArray = HangManData[random].word.toUpperCase().split("");
+    setWordArray(newWordArray);
+  
+    setduplicateArray(Array(newWordArray.length).fill(""));
+  };
+
   return (
     <>
       <div className="cont row">
         <h1 id="title">Hangman</h1>
-        <div className="col-md-3 col-sm-12 d-flex flex-column align-items-center justify-content-center">
+        <div className="col-md-3 col-sm-12 d-flex flex-column align-items-start justify-content-start">
+          <h4>Welcome {user}!</h4>
           <h5>Lets guess the word🤔</h5>
           <h2>Score : {score}</h2>
           <img className="img" src={img} alt="" />
         </div>
 
         <div className="col-md-9 col-sm-12">
+          <div className="hangmanViewScore">
+          <button
+            onClick={()=>{
+              reloadGame()
+            }}
+            className="me-3 up">Reload Game</button>
+
+
+           <button 
+            onClick={()=>navigate('/leaderboard',{
+              state:{
+                id:location.state.id
+              }
+            })}
+            className="up">View Score</button>
+
+          </div>
           <div className="content">
             <div className="word">
               {duplicateArray.map((e) => {
@@ -133,9 +214,7 @@ function HangMan() {
         </div>
       </div>
       <div className="classbtn">
-        <button className="reloadbtn" onClick={() => window.location.reload()}>
-          Restart
-        </button>
+       
 
         <button className="reloadbtn" onClick={() => navigate(-1)}>
           Back to Home
@@ -153,6 +232,8 @@ function HangMan() {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <NamePopUp  show={modalShow} onHide={() => setModalShow(false)}/>
     </>
   );
 }

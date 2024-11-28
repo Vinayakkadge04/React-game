@@ -1,11 +1,31 @@
-
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { URL } from "./utils/constants";
+import axios from "axios";
 
 function LeaderBoard() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [id, setId] = useState();
+  const [Gamedata, setGameData] = useState([]);
+
+  useEffect(() => {
+    console.log(location.state.id, "GameId");
+    getData();
+  });
+
+  const getData = async () => {
+    try {
+      const url = URL + `leaderboard/${location.state.id}`;
+      const res = await axios.get(url);
+      console.log(res.data.game, "GameData");
+      setGameData(res.data.game);
+    } catch (error) {
+      console.log(error, "Error from leaderboard");
+    }
+  };
 
   return (
     <Main>
@@ -20,21 +40,20 @@ function LeaderBoard() {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td scope="row">1</td>
-            <td>Amen</td>
-            <td>100</td>
-          </tr>
-          <tr>
-            <td scope="row">2</td>
-            <td>Annand</td>
-            <td>68</td>
-          </tr>
+          {Gamedata.map((item, index) => (
+          
+            <tr>
+              <td scope="row">{index+1}</td>
+              <td>{item.user.name}</td>
+              <td>{item.score}</td>
+            </tr>
+          ))}
+         
         </tbody>
       </Table>
       <ButtonContainer>
-        <Button onClick={() => navigate(-1)}>Back to Game</Button>
-        <Button onClick={() => navigate("/")}>Back to Home</Button>
+        <button onClick={() => navigate(-1)}>Back to Game</button>
+        <button onClick={() => navigate("/")}>Back to Home</button>
       </ButtonContainer>
     </Main>
   );

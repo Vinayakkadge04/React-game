@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React , { useEffect, useState } from "react";
 import blueCandy from "../images/blue-candy.png";
 import greenCandy from "../images/green-candy.png";
 import orangeCandy from "../images/orange-candy.png";
@@ -7,7 +7,13 @@ import redCandy from "../images/red-candy.png";
 import yellowCandy from "../images/yellow-candy.png";
 import blank from "../images/blank.png";
 import "./candycrush.css";
-import { useNavigate } from "react-router-dom";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import { useNavigate , useLocation } from "react-router-dom";
+import NamePopUp from "../name_pop";
+import { useSelector } from "react-redux";
+import { URL } from "../utils/constants";
+import axios from "axios";
 
 const width = 8;
 const candyColors = [
@@ -25,9 +31,17 @@ function CandyCrush() {
   const [squareBeingDragged, setSquareBeingDragged] = useState(null);
   const [squareBeingReplaced, setSquareBeingReplaced] = useState(null);
   const [scoreDisplay, setScoreDisplay] = useState(0);
-  const [min, setMin] = useState(0);
+  const [min, setMin] = useState(1);
   const [sec, setSec] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(true);
+  const [end , setEnd] = useState(false)
+  const [show, setShow] = useState(false);
+  const [gameOver , setGameOver] = useState(false);
+  const [modalShow, setModalShow] = React.useState(true);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const location = useLocation();
+  const {user,nameEntered,id} = useSelector((state)=>state.user)
 
   const checkForColumnOfFour = () => {
     for (let i = 0; i <= 39; i++) {
@@ -168,7 +182,6 @@ function CandyCrush() {
     ];
 
     const validMove = validMoves.includes(squareBeingReplacedId);
-
     const isAColumnOfFour = checkForColumnOfFour();
     const isARowOfFour = checkForRowOfFour();
     const isAColumnOfThree = checkForColumnOfThree();
@@ -222,37 +235,95 @@ function CandyCrush() {
     moveIntoSquareBelow,
     currentColorArrangement,
   ]);
-
+  
   useEffect(() => {
     let timer;
     if (isTimerRunning) {
       timer = setInterval(() => {
         setSec((prevSec) => {
-          if (prevSec === 59) {
-            setMin((prevMin) => prevMin + 1);
-            return 0;
+          if (prevSec === 0) {
+            setMin((prevMin) => {
+              if (prevMin === 0) 
+                { navigate("/leaderboard", {
+                state: {
+                  id: location.state.id,
+                },
+              })
+                InsertScore();
+                clearInterval(timer); 
+                setIsTimerRunning(false); 
+                setEnd(true); 
+                setGameOver(true)
+                return 0;
+              }
+              return prevMin - 1;
+            });
+            return 59; 
           }
-          return prevSec + 1;
+          return prevSec - 1; 
         });
       }, 1000);
     }
-
-    return () => clearInterval(timer); // Cleanup on unmount
+  
+    return () => clearInterval(timer);
   }, [isTimerRunning]);
+  
+  useEffect(() => {
+    setModalShow(!nameEntered);
+  }, [nameEntered]);
+
+  const InsertScore = async() =>{
+    console.log("Hello")
+    try{
+      const url = URL+'leaderboard'
+      const res = await axios({
+        method:"post",
+        url:url,
+        data:{
+          "score":scoreDisplay,
+          "gameId":location.state.id,
+          "userId":id
+        }
+      });
+      if(res.data.status === "success"){
+        console.log(res.data,"Data");
+      }
+    }catch(error){
+      console.log(error,"Error");
+      console.warn("Score not submitted, Please play again!")
+    }
+    
+  }
+
+  const resetGame = () =>{
+    setScoreDisplay(0); 
+    setMin(1); 
+    setSec(0); 
+    setIsTimerRunning(true); 
+    setGameOver(false); 
+    setEnd(false); 
+  }
+
 
   return (
     <div className="app row">
+      <h2 className="ajdhgwa">Welcome {user}!</h2>
       
       <div className="col-lg-2 col-sm-12 score-board">
+
         <h3>
           Timer : {String(min).padStart(2, "0")}:{String(sec).padStart(2, "0")}
         </h3>
         <h2> Score : {scoreDisplay}</h2>{" "}
-        <a href={"/leaderboard"}>
-          <button className="btn btn-primary">My Score</button>
-        </a>
+        <button 
+              onClick={()=>navigate('/leaderboard',{
+                state:{
+                  id:location.state.id
+                }
+              })}
+            className="up m-2">High Score</button>
         <div>
-        <button className="reloadbtn" onClick={() => window.location.reload()}>
+        <button className="reloadbtn" onClick={() => resetGame()}>
           Restart
         </button>
 
@@ -279,9 +350,27 @@ function CandyCrush() {
         ))}
       </div>
       
-     
 
-   
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Game Over!!</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Game Over! Time’s up! Great effort—try again and aim for a new high score!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            OK
+          </Button>
+       
+        </Modal.Footer>
+      </Modal>
+
+      <NamePopUp  show={modalShow} onHide={() => setModalShow(false)}/>
+
+
+        {
+          gameOver ??
+          <h2>Game Over</h2>
+        }
     </div>
   );
 }

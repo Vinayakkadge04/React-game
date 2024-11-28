@@ -4,11 +4,17 @@ import win from "../images/win.png";
 import "./memorygame.css";
 import PopUpModel from "./PopUp";
 import { Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import NamePopUp from "../name_pop";
+import { useSelector } from "react-redux";
+import { URL } from "../utils/constants";
+import axios from "axios";
 
 function MemoryGame() {
+  const location = useLocation();
   let navigate = useNavigate();
   const [modalShow, setModalShow] = React.useState(false);
+  const [rulemodalShow, setRuleModalShow] = React.useState(false);
   let [emojiNewArray, setemojiNewArray] = useState([]);
   const [sec, setSec] = useState(0);
   const [min, setMin] = useState(0);
@@ -16,6 +22,7 @@ function MemoryGame() {
   let [myArray, setmyArray] = useState([]);
   let [newArray, setnewArray] = useState([]);
   var [score, setScore] = useState(0);
+  const { user, nameEntered, id } = useSelector((state) => state.user);
   // taken code from Google
 
   function printArray(arr) {
@@ -46,14 +53,13 @@ function MemoryGame() {
       }, 1000);
     }
 
-    return () => clearInterval(timer); // Cleanup on unmount
+    return () => clearInterval(timer);
   }, [isTimerRunning]);
 
   useEffect(() => {
     randomize(emojiData);
     printArray(emojiData);
   }, [emojiData]);
-
 
   const getId = (id) => {
     console.log(id);
@@ -65,6 +71,13 @@ function MemoryGame() {
   useEffect(() => {
     if (newArray.length === emojiData.length / 2) {
       setIsTimerRunning(false);
+      InsertScore();
+
+      navigate("/leaderboard", {
+        state: {
+          id: location.state.id,
+        },
+      });
     }
   }, [newArray]);
 
@@ -90,16 +103,58 @@ function MemoryGame() {
     }
   }, [myArray]);
 
+  useEffect(() => {
+    setModalShow(!nameEntered);
+  }, [nameEntered]);
+
+  const InsertScore = async () => {
+    console.log("Hello");
+    try {
+      const url = URL + "leaderboard";
+      const res = await axios({
+        method: "post",
+        url: url,
+        data: {
+          score: score,
+          gameId: location.state.id,
+          userId: id,
+        },
+      });
+      if (res.data.status === "success") {
+        console.log(res.data, "Data");
+      }
+    } catch (error) {
+      console.log(error, "Error");
+    }
+  };
+
+  useEffect(() => {
+    console.log(location.state, "State");
+  });
+
+  const resetGame = () => {
+    setSec(0);
+    setMin(0);
+    setIsTimerRunning(true);
+    setemojiNewArray([]);
+    setmyArray([]);
+    setnewArray([]);
+    setScore(0);
+    randomize(emojiData);
+    printArray(emojiData);
+  };
+
   return (
     <>
       <div id="main">
+        <h5 className="zndk">Welcome {user}!</h5>
         <h1 className="title">Lets Play🥳</h1>
 
         <div className="sct2">
           <div className="memResult">
             <div>
               <h2>Score : {score}</h2>
-              <h2 style={{width:"180px"}}>
+              <h2 style={{ width: "180px" }}>
                 {" "}
                 Timer : {String(min).padStart(2, "0")}:
                 {String(sec).padStart(2, "0")}
@@ -107,62 +162,65 @@ function MemoryGame() {
             </div>
 
             <div className="gridView">
-          {emojiNewArray.map((item, index) => {
-            return (
-              <>
-                <div
-                  key={index}
-                  onClick={() => {
-                    getId(item.id);
-                  }}
-                  className="imgbox"
-                >
-                  <div className="imgbg">
-                    {/* <img className="img" src={item.img} /> */}
-                    <p id="emoji">{item.emoji}</p>
+              {emojiNewArray.map((item, index) => {
+                return (
+                  <>
                     <div
-                      style={{
-                        opacity:
-                          newArray.includes(item.imgID) ||
-                          myArray.includes(item.id)
-                            ? "0"
-                            : "1",
+                      key={index}
+                      onClick={() => {
+                        getId(item.id);
                       }}
-                      className="cover"
-                    ></div>
-                  </div>
-                </div>
-              </>
-            );
-          })}
-        </div>
+                      className="imgbox"
+                    >
+                      <div className="imgbg">
+                        {/* <img className="img" src={item.img} /> */}
+                        <p id="emoji">{item.emoji}</p>
+                        <div
+                          style={{
+                            opacity:
+                              newArray.includes(item.imgID) ||
+                              myArray.includes(item.id)
+                                ? "0"
+                                : "1",
+                          }}
+                          className="cover"
+                        ></div>
+                      </div>
+                    </div>
+                  </>
+                );
+              })}
+            </div>
 
             <div>
-              <Button variant="primary" onClick={() => setModalShow(true)}>
-              🤔 Need Help?
+              <Button variant="primary" onClick={() => setRuleModalShow(true)}>
+                🤔 Need Help?
               </Button>
-              <a href={"/leaderBoard"}>
-                {" "}
-                <button className="btn btn-primary">Your Score</button>
-              </a>
+              <button
+                onClick={() =>
+                  navigate("/leaderboard", {
+                    state: {
+                      id: location.state.id,
+                    },
+                  })
+                }
+                className="up m-2"
+              >
+                View Score
+              </button>
             </div>
           </div>
-          </div>
-          {newArray.length === emojiData.length / 2 ? (
-            <>
-              <div className="winnig">
-                <h1>Game Over!!!</h1>
-               
-              </div>
-            </>
-          ) : null}
+        </div>
+        {newArray.length === emojiData.length / 2 ? (
+          <>
+            <div className="winnig">
+              <h1>Game Over!!!</h1>
+            </div>
+          </>
+        ) : null}
 
-        
         <div id="mybtn">
-          <button
-            className="reloadbtn"
-            onClick={() => window.location.reload()}
-          >
+          <button className="reloadbtn" onClick={() => resetGame()}>
             Restart
           </button>
 
@@ -172,7 +230,8 @@ function MemoryGame() {
         </div>
       </div>
 
-      <PopUpModel show={modalShow} onHide={() => setModalShow(false)} />
+      <PopUpModel show={rulemodalShow} onHide={() => setRuleModalShow(false)} />
+      <NamePopUp show={modalShow} onHide={() => setModalShow(false)} />
     </>
   );
 }

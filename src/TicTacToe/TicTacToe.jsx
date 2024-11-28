@@ -1,9 +1,15 @@
 import Board from "./component/Board";
 import Square from "./component/Square";
 import "./tictactoe.css";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { useNavigate , useLocation } from "react-router-dom";
+import NamePopUp from "../name_pop";
+import { useSelector } from "react-redux";
+import { URL } from "../utils/constants";
+import axios from "axios";
+
 
 const defaultSquares = () => new Array(9).fill(null);
 const lines = [
@@ -18,6 +24,7 @@ const lines = [
 ];
 
 function TicTacToe() {
+  let navigate = useNavigate();
   const [squares, setSquares] = useState(defaultSquares());
   const [winner, setWinner] = useState(null);
   const [winsLossesDraws, setwinsLossesDraws] = useState({
@@ -25,12 +32,19 @@ function TicTacToe() {
     losses: 0,
     draws: 0,
   });
+  const [score , setscore] = useState(0);
   const [round, setRound] = useState(6);
   const [end, setEnd] = useState(false);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const [overwinner , setOverWinner] = useState("");
+  const [overwinner, setOverWinner] = useState("");
+  const location = useLocation();
+  const [modalShow, setModalShow] = React.useState(true);
+
+  const {user,nameEntered,id} = useSelector((state)=>state.user)
+
+
   let isPlayerWon = false;
   useEffect(() => {
     const linesThatAre = (a, b, c) => {
@@ -51,12 +65,14 @@ function TicTacToe() {
     if (playerWon) {
       setWinner("x");
       setwinsLossesDraws((winsLossesDraws) => {
+        setscore(score+10);
         return { ...winsLossesDraws, wins: winsLossesDraws.wins + 1 };
       });
       isPlayerWon = true;
     } else if (computerWon) {
       setWinner("o");
       setwinsLossesDraws((winsLossesDraws) => {
+        setscore(score-10);
         return { ...winsLossesDraws, losses: winsLossesDraws.losses + 1 };
       });
     } else if (emptyIndexes.length === 1) {
@@ -112,8 +128,8 @@ function TicTacToe() {
   }, [squares]);
 
   function handleSquareClick(index) {
-    if (end) {
-      return null;
+    if (end || squares[index] !== null || winner !== null) {
+      return;
     }
     const isPlayerTurn =
       squares.filter((square) => square !== null).length % 2 === 0;
@@ -134,7 +150,13 @@ function TicTacToe() {
     console.log(round, "Round");
     if (round === 0) {
       setEnd(true);
-      handleShow()
+      handleShow();
+      InsertScore();
+      navigate("/leaderboard", {
+        state: {
+          id: location.state.id,
+        },
+      })
       if (winsLossesDraws.wins > winsLossesDraws.losses) {
         setOverWinner("You Won");
       } else {
@@ -143,57 +165,137 @@ function TicTacToe() {
     }
   }, [round]);
 
-  return (
-    <div className="ticbody">
-      <main className="ticmain">
-        <h1>Tic Tac Toe</h1>
-        <h5>{round}/6</h5>
-        <Board>
-          {squares.map((square, index) => (
-            <Square
-              x={square === "x" ? 1 : 0}
-              o={square === "o" ? 1 : 0}
-              onClick={() => handleSquareClick(index)}
-            />
-          ))}
-        </Board>
-        <h3>
-          Wins: {winsLossesDraws.wins} Losses: {winsLossesDraws.losses} Draws:{" "}
-          {winsLossesDraws.draws}
-        </h3>
-        {!!winner && winner === "x" && (
-          <div className="result green">
-            You WON!
-            <button onClick={resetBoard}>Next Round</button>
-          </div>
-        )}
-        {!!winner && winner === "o" && (
-          <div className="result red">
-            You LOST!
-            <button onClick={resetBoard}>Next Round</button>
-          </div>
-        )}
-        {!!winner && winner === "draw" && (
-          <div className="result gray">
-            It's a DRAW!
-            <button onClick={resetBoard}>Next Round</button>
-          </div>
-        )}
-      </main>
+  useEffect(() => {
+    setModalShow(!nameEntered);
+  }, [nameEntered]);
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header>
-          <Modal.Title>{overwinner}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-          OK
-          </Button>
+  const InsertScore = async() =>{
+    console.log("Hello")
+    try{
+      const url = URL+'leaderboard'
+      const res = await axios({
+        method:"post",
+        url:url,
+        data:{
+          "score":score,
+          "gameId":location.state.id,
+          "userId":id
+        }
+      });
+      if(res.data.status === "success"){
+        console.log(res.data,"Data");
+        navigate('/leaderboard',{
+          state:{
+            id:location.state.id
+          }
+        })
+      }
+    }catch(error){
+      console.log(error,"Error")
+    }
+  }
+
+  useEffect(()=>{
+    console.log(location.state,"State")
+  })
+
+  const reloadGame = () => {
+  
+    setSquares(defaultSquares()); 
+    setWinner(null);
+    setwinsLossesDraws({
+      wins: 0,
+      losses: 0,
+      draws: 0,
+    }); 
+    setscore(0); 
+    setRound(6); 
+    setEnd(false);
+    setOverWinner("");
+    setShow(false); 
+  };
+  
+
+  return (
+    <>
+      <div className="ticbody">
+        <h3 className="ajdhgwa">Welcome {user}!</h3>
+      <div className="navigation">
+        <div className="button text-center">
+            <button 
+              onClick={()=>navigate('/leaderboard',{
+                state:{
+                  id:location.state.id
+                }
+              })}
+            className="up m-2">View Score</button>
+        
+          <button
+            className="left m-2"
+            onClick={() => {
+             reloadGame()
+            }}
+          >
+            Reload Game
+          </button>
+          <br />
+          <a href={"/"}>
+            <button className="right m-2">Back to Home</button>
+            <br />
+          </a>
+        </div>
+      </div>
+
+        <main className="ticmain">
+          <h1>Tic Tac Toe</h1>
+          <h5>Remain chance: {round}/6</h5>
+          <h5>Score :{score}</h5>
+          <Board>
+            {squares.map((square, index) => (
+              <Square
+                x={square === "x" ? 1 : 0}
+                o={square === "o" ? 1 : 0}
+                onClick={() => handleSquareClick(index)}
+              />
+            ))}
+          </Board>
+          <h3>
+            Wins: {winsLossesDraws.wins} Losses: {winsLossesDraws.losses} Draws:{" "}
+            {winsLossesDraws.draws}
+          </h3>
          
-        </Modal.Footer>
-      </Modal>
-    </div>
+          {!!winner && winner === "x" && (
+            <div className="result green">
+              You WON!
+              <button onClick={resetBoard}>Next Round</button>
+            </div>
+          )}
+          {!!winner && winner === "o" && (
+            <div className="result red">
+              You LOST!
+              <button onClick={resetBoard}>Next Round</button>
+            </div>
+          )}
+          {!!winner && winner === "draw" && (
+            <div className="result gray">
+              It's a DRAW!
+              <button onClick={resetBoard}>Next Round</button>
+            </div>
+          )}
+        </main>
+
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Body>{overwinner}</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              OK
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+
+      <NamePopUp  show={modalShow} onHide={() => setModalShow(false)}/>
+    </>
   );
 }
 

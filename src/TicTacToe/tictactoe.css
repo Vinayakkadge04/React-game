@@ -1,9 +1,9 @@
-
 .ticmain {
   width: 300px;
   margin: 50px auto 0;
 }
-.ticmain h1, h3 {
+.ticmain h1,
+h3 {
   text-align: center;
 }
 div.board {
@@ -45,13 +45,36 @@ div.result.red {
 div.result.gray {
   background-color: gray;
 }
-.ticbody{
+.ticbody {
   display: flex;
   align-items: center;
   justify-content: center;
-   background-color: #123;
-    color: #fff;
-    font-family: monospace;
-    height: 100vh;
+  background-color: #123;
+  color: #fff;
+  font-family: monospace;
+  height: 100vh;
 }
- 
+.ajdhgwa {
+  position: fixed;
+  top: 20%;
+  left: 5%;
+}
+@media screen and (max-width: 440px) {
+  .navigation .button {
+    display: flex;
+    font-size: 12px;
+    top: 9%;
+    position: fixed;
+    left: 0;
+    padding: 0;
+  }
+  .navigation .button button {
+    font-size: 12px;
+    padding: 4px 14px;
+  }
+  .ajdhgwa {
+   
+    top: 5%;
+    font-size: 18px;
+  }
+}

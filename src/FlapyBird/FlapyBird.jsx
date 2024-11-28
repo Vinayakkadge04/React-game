@@ -1,7 +1,12 @@
 import styled from "styled-components";
-import './flapybird.css'
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import "./flapybird.css";
+import { useNavigate, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import NamePopUp from "../name_pop";
+import { useSelector } from "react-redux";
+import { URL } from "../utils/constants";
+import axios from "axios";
+
 const BIRD_HEIGHT = 28;
 const BIRD_WIDTH = 33;
 const WALL_HEIGHT = 600;
@@ -12,6 +17,7 @@ const OBJ_SPEED = 6;
 const OBJ_GAP = 200;
 function FlapyBird() {
   let navigate = useNavigate();
+
   const [isStart, setIsStart] = useState(false);
   const [birdpos, setBirspos] = useState(300);
   const [objHeight, setObjHeight] = useState(0);
@@ -23,8 +29,13 @@ function FlapyBird() {
   const [resmin, setresMin] = useState(0);
   const [ressec, setresSec] = useState(0);
 
-  const [res , setres] = useState(0)
+  const [res, setres] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(true);
+  const location = useLocation();
+  const [modalShow, setModalShow] = React.useState(true);
+
+  const { user, nameEntered, id } = useSelector((state) => state.user);
+
   useEffect(() => {
     let intVal;
     if (isStart && birdpos < WALL_HEIGHT - BIRD_HEIGHT) {
@@ -35,24 +46,24 @@ function FlapyBird() {
     return () => clearInterval(intVal);
   });
 
-useEffect(()=>{
-  if(isStart){
-    let timer;
-    if (isTimerRunning) {
-      timer = setInterval(() => {
-        setSec((prevSec) => {
-          if (prevSec === 59) {
-            setMin((prevMin) => prevMin + 1);
-            return 0;
-          }
-          return prevSec + 1;
-        });
-      }, 1000);
-    }
+  useEffect(() => {
+    if (isStart) {
+      let timer;
+      if (isTimerRunning) {
+        timer = setInterval(() => {
+          setSec((prevSec) => {
+            if (prevSec === 59) {
+              setMin((prevMin) => prevMin + 1);
+              return 0;
+            }
+            return prevSec + 1;
+          });
+        }, 1000);
+      }
 
-    return () => clearInterval(timer);
-  }
-},[isStart])
+      return () => clearInterval(timer);
+    }
+  }, [isStart]);
 
   useEffect(() => {
     let objval;
@@ -83,25 +94,87 @@ useEffect(()=>{
       objPos <= OBJ_WIDTH + 80 &&
       (topObj || bottomObj)
     ) {
+      InsertScore();
       setIsStart(false);
-     
       setBirspos(300);
       setScore(0);
     }
   }, [isStart, birdpos, objHeight, objPos]);
   const handler = () => {
-    if (!isStart){ setIsStart(true);
+    if (!isStart) {
+      setIsStart(true);
       setMin(0);
       setSec(0);
-    }
-   
-    else if (birdpos < BIRD_HEIGHT) setBirspos(0);
+    } else if (birdpos < BIRD_HEIGHT) setBirspos(0);
     else setBirspos((birdpos) => birdpos - 50);
   };
+
+  const resetGame = () => {
+    setIsStart(false);
+    setBirspos(300);
+    setObjHeight(0);
+    setObjPos(WALL_WIDTH);
+    setScore(0);
+    setMin(0);
+    setSec(0);
+    setIsTimerRunning(false);
+  };
+
+  useEffect(() => {
+    setModalShow(!nameEntered);
+  }, [nameEntered]);
+
+  const InsertScore = async () => {
+    console.log("Hello");
+    try {
+      const url = URL + "leaderboard";
+      const res = await axios({
+        method: "post",
+        url: url,
+        data: {
+          score: score,
+          gameId: location.state.id,
+          userId: id,
+        },
+      });
+      if (res.data.status === "success") {
+        console.log(res.data, "Data");
+        navigate("/leaderboard", {
+          state: {
+            id: location.state.id,
+          },
+        });
+      }
+    } catch (error) {
+      console.log(error, "Error");
+    }
+  };
+
+  useEffect(() => {
+    console.log(location.state, "State");
+  });
+
   return (
     <Home onClick={handler}>
-      {/* <span className="scoring">Score : {score}</span> */}
-      <h3>Time :  {String(min).padStart(2, "0")}:{String(sec).padStart(2, "0")}</h3>
+      <div className="sfsd d-flex align-items-center">
+        <h5 className="zndk">Welcome {user}!</h5>
+
+        <h3 className="scoring m-0">Score : {score}</h3>
+        <button
+          onClick={() =>
+            navigate("/leaderboard", {
+              state: {
+                id: location.state.id,
+              },
+            })
+          }
+          className="up m-2"
+        >
+          View Score
+        </button>
+      </div>
+
+      {/* <h3>Time :  {String(min).padStart(2, "0")}:{String(sec).padStart(2, "0")}</h3> */}
       <Background height={WALL_HEIGHT} width={WALL_WIDTH}>
         {!isStart ? <Startboard>Click To Start</Startboard> : null}
         <Obj
@@ -127,14 +200,15 @@ useEffect(()=>{
       </Background>
 
       <div>
-      <button className="reladbtn" onClick={()=>window.location.reload()}>
+        <button className="ReloadGame" onClick={() => resetGame()}>
           Restart
         </button>
 
-        <button className="reladbtn" onClick={()=>navigate(-1)}>
+        <button className="ReloadGame" onClick={() => navigate("/")}>
           Back to Home
         </button>
       </div>
+      <NamePopUp show={modalShow} onHide={() => setModalShow(false)} />
     </Home>
   );
 }
@@ -146,9 +220,13 @@ const Home = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to right, #6a11cb, #2575fc); /* Gradient background */
+  background: linear-gradient(
+    to right,
+    #6a11cb,
+    #2575fc
+  ); /* Gradient background */
   overflow: hidden;
-  flex-direction:column;
+  flex-direction: column;
 `;
 const Background = styled.div`
   background-image: url("../images/background-day.png");
@@ -157,12 +235,12 @@ const Background = styled.div`
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;
   position: relative;
-  overflow:hidden;
-   border: 5px solid #ffffff; 
-  border-radius: 20px; 
+  overflow: hidden;
+  border: 5px solid #ffffff;
+  border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  @media screen and (max-width:440px){
-    width:340px
+  @media screen and (max-width: 440px) {
+    width: 340px;
   }
 `;
 
@@ -188,7 +266,7 @@ const Obj = styled.div`
 `;
 
 const Startboard = styled.div`
-   position: relative;
+  position: relative;
   top: 49%;
   background-color: #1e1e1e;
   padding: 15px 20px;
@@ -198,12 +276,12 @@ const Startboard = styled.div`
   text-align: center;
   font-size: 24px;
   border-radius: 10px;
-  color: #ffcc00; 
+  color: #ffcc00;
   font-weight: 700;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Strong shadow for emphasis */
   text-transform: uppercase;
   transition: transform 0.3s ease-in-out;
-  
+
   &:hover {
     transform: scale(1.1);
   }
@@ -213,4 +291,3 @@ const ScoreShow = styled.div`
   text-align: center;
   background: transparent;
 `;
-
