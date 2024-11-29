@@ -6,6 +6,7 @@ import NamePopUp from "../name_pop";
 import { useSelector } from "react-redux";
 import { URL } from "../utils/constants";
 import axios from "axios";
+import Layout from "../Layout";
 
 const BIRD_HEIGHT = 28;
 const BIRD_WIDTH = 33;
@@ -155,61 +156,61 @@ function FlapyBird() {
   });
 
   return (
-    <Home onClick={handler}>
-      <div className="sfsd d-flex align-items-center">
-        <h5 className="zndk">Welcome {user}!</h5>
+    <Layout><Home onClick={handler}>
+    <div className="sfsd d-flex align-items-center">
+      <h5 className="zndk">Welcome {user}!</h5>
 
-        <h3 className="scoring m-0">Score : {score}</h3>
-        <button
-          onClick={() =>
-            navigate("/leaderboard", {
-              state: {
-                id: location.state.id,
-              },
-            })
-          }
-          className="up m-2"
-        >
-          View Score
-        </button>
-      </div>
+      <h3 className="scoring m-0">Score : {score}</h3>
+      <button
+        onClick={() =>
+          navigate("/leaderboard", {
+            state: {
+              id: location.state.id,
+            },
+          })
+        }
+        className="up m-2"
+      >
+        View Score
+      </button>
+    </div>
 
-      {/* <h3>Time :  {String(min).padStart(2, "0")}:{String(sec).padStart(2, "0")}</h3> */}
-      <Background height={WALL_HEIGHT} width={WALL_WIDTH}>
-        {!isStart ? <Startboard>Click To Start</Startboard> : null}
-        <Obj
-          height={objHeight}
-          width={OBJ_WIDTH}
-          left={objPos}
-          top={0}
-          deg={180}
-        />
-        <Bird
-          height={BIRD_HEIGHT}
-          width={BIRD_WIDTH}
-          top={birdpos}
-          left={100}
-        />
-        <Obj
-          height={WALL_HEIGHT - OBJ_GAP - objHeight}
-          width={OBJ_WIDTH}
-          left={objPos}
-          top={WALL_HEIGHT - (objHeight + (WALL_HEIGHT - OBJ_GAP - objHeight))}
-          deg={0}
-        />
-      </Background>
+    {/* <h3>Time :  {String(min).padStart(2, "0")}:{String(sec).padStart(2, "0")}</h3> */}
+    <Background height={WALL_HEIGHT} width={WALL_WIDTH}>
+      {!isStart ? <Startboard>Click To Start</Startboard> : null}
+      <Obj
+        height={objHeight}
+        width={OBJ_WIDTH}
+        left={objPos}
+        top={0}
+        deg={180}
+      />
+      <Bird
+        height={BIRD_HEIGHT}
+        width={BIRD_WIDTH}
+        top={birdpos}
+        left={100}
+      />
+      <Obj
+        height={WALL_HEIGHT - OBJ_GAP - objHeight}
+        width={OBJ_WIDTH}
+        left={objPos}
+        top={WALL_HEIGHT - (objHeight + (WALL_HEIGHT - OBJ_GAP - objHeight))}
+        deg={0}
+      />
+    </Background>
 
-      <div>
-        <button className="ReloadGame" onClick={() => resetGame()}>
-          Restart
-        </button>
+    <div>
+      <button className="ReloadGame" onClick={() => resetGame()}>
+        Restart
+      </button>
 
-        <button className="ReloadGame" onClick={() => navigate("/")}>
-          Back to Home
-        </button>
-      </div>
-      <NamePopUp show={modalShow} onHide={() => setModalShow(false)} />
-    </Home>
+      <button className="ReloadGame" onClick={() => navigate("/")}>
+        Back to Home
+      </button>
+    </div>
+    <NamePopUp show={modalShow} onHide={() => setModalShow(false)} />
+  </Home></Layout>
   );
 }
 

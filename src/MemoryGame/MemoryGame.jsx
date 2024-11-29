@@ -9,6 +9,7 @@ import NamePopUp from "../name_pop";
 import { useSelector } from "react-redux";
 import { URL } from "../utils/constants";
 import axios from "axios";
+import Layout from "../Layout";
 
 function MemoryGame() {
   const location = useLocation();
@@ -39,22 +40,21 @@ function MemoryGame() {
     }
   }
 
-  useEffect(() => {
-    let timer;
-    if (isTimerRunning) {
-      timer = setInterval(() => {
-        setSec((prevSec) => {
-          if (prevSec === 59) {
-            setMin((prevMin) => prevMin + 1);
-            return 0;
-          }
-          return prevSec + 1;
-        });
-      }, 1000);
-    }
-
-    return () => clearInterval(timer);
-  }, [isTimerRunning]);
+  // useEffect(() => {
+  //   let timer;
+  //   if (isTimerRunning) {
+  //     timer = setInterval(() => {
+  //       setSec((prevSec) => {
+  //         if (prevSec === 59) {
+  //           setMin((prevMin) => prevMin + 1);
+  //           return 0;
+  //         }
+  //         return prevSec + 1;
+  //       });
+  //     }, 1000);
+  //   }
+  //   return () => clearInterval(timer);
+  // }, [isTimerRunning]);
 
   useEffect(() => {
     randomize(emojiData);
@@ -95,7 +95,6 @@ function MemoryGame() {
         console.log("Both are different...");
         setTimeout(() => {
           console.log("in");
-
           setmyArray([]);
         }, 300);
         setScore(score - 5);
@@ -145,94 +144,94 @@ function MemoryGame() {
   };
 
   return (
-    <>
-      <div id="main">
-        <h5 className="zndk">Welcome {user}!</h5>
-        <h1 className="title">Lets Play🥳</h1>
+   <Layout> <>
+   <div id="main">
+     <h5 className="zndk">Welcome {user}!</h5>
+     <h1 className="title">Lets Play🥳</h1>
 
-        <div className="sct2">
-          <div className="memResult">
-            <div>
-              <h2>Score : {score}</h2>
-              <h2 style={{ width: "180px" }}>
-                {" "}
-                Timer : {String(min).padStart(2, "0")}:
-                {String(sec).padStart(2, "0")}
-              </h2>
-            </div>
+     <div className="sct2">
+       <div className="memResult">
+         <div>
+           <h2>Score : {score}</h2>
+           <h2 style={{ width: "180px" }}>
+             {" "}
+             Timer : {String(min).padStart(2, "0")}:
+             {String(sec).padStart(2, "0")}
+           </h2>
+         </div>
 
-            <div className="gridView">
-              {emojiNewArray.map((item, index) => {
-                return (
-                  <>
-                    <div
-                      key={index}
-                      onClick={() => {
-                        getId(item.id);
-                      }}
-                      className="imgbox"
-                    >
-                      <div className="imgbg">
-                        {/* <img className="img" src={item.img} /> */}
-                        <p id="emoji">{item.emoji}</p>
-                        <div
-                          style={{
-                            opacity:
-                              newArray.includes(item.imgID) ||
-                              myArray.includes(item.id)
-                                ? "0"
-                                : "1",
-                          }}
-                          className="cover"
-                        ></div>
-                      </div>
-                    </div>
-                  </>
-                );
-              })}
-            </div>
+         <div className="gridView">
+           {emojiNewArray.map((item, index) => {
+             return (
+               <>
+                 <div
+                   key={index}
+                   onClick={() => {
+                     getId(item.id);
+                   }}
+                   className="imgbox"
+                 >
+                   <div className="imgbg">
+                     {/* <img className="img" src={item.img} /> */}
+                     <p id="emoji">{item.emoji}</p>
+                     <div
+                       style={{
+                         opacity:
+                           newArray.includes(item.imgID) ||
+                           myArray.includes(item.id)
+                             ? "0"
+                             : "1",
+                       }}
+                       className="cover"
+                     ></div>
+                   </div>
+                 </div>
+               </>
+             );
+           })}
+         </div>
 
-            <div>
-              <Button variant="primary" onClick={() => setRuleModalShow(true)}>
-                🤔 Need Help?
-              </Button>
-              <button
-                onClick={() =>
-                  navigate("/leaderboard", {
-                    state: {
-                      id: location.state.id,
-                    },
-                  })
-                }
-                className="up m-2"
-              >
-                View Score
-              </button>
-            </div>
-          </div>
-        </div>
-        {newArray.length === emojiData.length / 2 ? (
-          <>
-            <div className="winnig">
-              <h1>Game Over!!!</h1>
-            </div>
-          </>
-        ) : null}
+         <div>
+           <Button variant="primary" onClick={() => setRuleModalShow(true)}>
+             🤔 Need Help?
+           </Button>
+           <button
+             onClick={() =>
+               navigate("/leaderboard", {
+                 state: {
+                   id: location.state.id,
+                 },
+               })
+             }
+             className="up m-2"
+           >
+             View Score
+           </button>
+         </div>
+       </div>
+     </div>
+     {newArray.length === emojiData.length / 2 ? (
+       <>
+         <div className="winnig">
+           <h1>Game Over!!!</h1>
+         </div>
+       </>
+     ) : null}
 
-        <div id="mybtn">
-          <button className="reloadbtn" onClick={() => resetGame()}>
-            Restart
-          </button>
+     <div id="mybtn">
+       <button className="reloadbtn" onClick={() => resetGame()}>
+         Restart
+       </button>
 
-          <button className="reloadbtn" onClick={() => navigate(-1)}>
-            Back to Home
-          </button>
-        </div>
-      </div>
+       <button className="reloadbtn" onClick={() => navigate(-1)}>
+         Back to Home
+       </button>
+     </div>
+   </div>
 
-      <PopUpModel show={rulemodalShow} onHide={() => setRuleModalShow(false)} />
-      <NamePopUp show={modalShow} onHide={() => setModalShow(false)} />
-    </>
+   <PopUpModel show={rulemodalShow} onHide={() => setRuleModalShow(false)} />
+   <NamePopUp show={modalShow} onHide={() => setModalShow(false)} />
+ </></Layout>
   );
 }
 

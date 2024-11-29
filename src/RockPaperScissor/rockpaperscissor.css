@@ -153,3 +153,11 @@
   .rpcReloadbtn:hover{
     background-color: #e64a19;
   }
+ 
+
+  @media screen and (max-width:440px){
+    .dsfbsdb{
+      position: fixed;
+      top: 3%;
+    }
+  }

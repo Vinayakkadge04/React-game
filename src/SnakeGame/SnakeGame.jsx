@@ -27,7 +27,7 @@ const SnakeGame = () => {
   const [score, setScore] = useState(0);
   const [gameId, setgameId] = useState(null);
   const location = useLocation();
-  const [modalShow, setModalShow] = React.useState(true);
+  const [modalShow, setModalShow] = useState(true);
   const navigate = useNavigate();
 
   const { user, nameEntered, id } = useSelector((state) => state.user);
@@ -53,13 +53,12 @@ const SnakeGame = () => {
     setGameOver(false);
     setScore(0);
   };
+
   useEffect(() => {
     if (!gameOver && !isPause) {
       const moveSnake = () => {
         const newSnake = snake.map((segment) => ({ ...segment }));
-
         const head = { ...newSnake[0] };
-
         switch (direction) {
           case "UP":
             head.row = (head.row - 1 + ROWS) % ROWS;
@@ -78,7 +77,6 @@ const SnakeGame = () => {
         }
 
         newSnake.unshift(head);
-
         if (head.row === food.row && head.col === food.col) {
           setFood(generateFood());
           setScore(score + 10);
@@ -88,15 +86,12 @@ const SnakeGame = () => {
 
         if (checkCollision(newSnake)) {
           InsertScore();
-         
           setGameOver(true);
         } else {
           setSnake(newSnake);
         }
       };
-
       const gameInterval = setInterval(moveSnake, 100);
-
       return () => {
         clearInterval(gameInterval);
       };
@@ -123,14 +118,15 @@ const SnakeGame = () => {
       }
     };
     document.addEventListener("keydown", handleKeyPress);
+
   }, []);
 
   useEffect(() => {
-    setModalShow(!nameEntered);
     if(nameEntered){
-      console.log(nameEntered,"Name Enetered!!!")
+    setModalShow(!nameEntered);
+    console.log(nameEntered,"Name Enetered!!!")
     }
-  }, [nameEntered]);
+  }, []);
 
   const InsertScore = async () => {
     console.log("Hello");
@@ -161,7 +157,8 @@ const SnakeGame = () => {
 
 
   return (
-    <>
+   <Layout>
+     <>
       <div className="snake_App">
       <h5>Welcome {user}!</h5>
         <h1>Hungry Snake</h1>
@@ -175,8 +172,7 @@ const SnakeGame = () => {
                   className={`cell ${
                     snake.some(
                       (segment) =>
-                        segment.row === rowIndex && segment.col === colIndex
-                    )
+                        segment.row === rowIndex && segment.col === colIndex)
                       ? "snake"
                       : ""
                   } ${
@@ -249,6 +245,7 @@ const SnakeGame = () => {
         <NamePopUp show={modalShow} onHide={() => setModalShow(false)} />
       </div>
     </>
+   </Layout>
   );
 };
 

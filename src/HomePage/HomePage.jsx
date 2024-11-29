@@ -3,6 +3,7 @@ import "./homepage.css";
 import axios from "axios";
 import { URL } from "../utils/constants";
 import { Link, useNavigate } from "react-router-dom";
+import Layout from "../Layout";
 
 function HomePage() {
   const [game, setGame] = useState(null);
@@ -23,7 +24,8 @@ function HomePage() {
   }, []);
 
   return (
-    <div>
+   <Layout>
+     <div>
       <div className="homeBanner"></div>
       {game ? (
         <div className="imgGrid">
@@ -99,6 +101,7 @@ function HomePage() {
         </div>
         </div> */}
     </div>
+   </Layout>
   );
 }
 

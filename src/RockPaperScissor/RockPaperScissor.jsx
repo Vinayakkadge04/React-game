@@ -7,6 +7,7 @@ import NamePopUp from "../name_pop";
 import { useSelector } from "react-redux";
 import { URL } from "../utils/constants";
 import axios from "axios";
+import Layout from "../Layout";
 
 function RockPaperScissor() {
   const options = ["Rock", "Paper", "Scissor"];
@@ -24,30 +25,15 @@ function RockPaperScissor() {
   const location = useLocation();
   const [modalShow, setModalShow] = React.useState(true);
   const { user, nameEntered, id } = useSelector((state) => state.user);
-
   let navigate = useNavigate();
-
   const handleClose1 = () => {
     InsertScore();
     setShow1(false);
-    navigate('/leaderboard',{
-      state:{
-        id:location.state.id
-      }
-    })
     setround([]);
     setWin(0);
     setLose(0);
     setDraw(0);
   };
-
-  const resetBoard = () => {
-    setround([]);
-    setWin(0);
-    setLose(0);
-    setDraw(0);
-  };
-
   const handleShow = () => setShow(true);
   const playRound = (playerChoice) => {
     const computerChoice = options[Math.floor(Math.random() * options.length)];
@@ -75,14 +61,13 @@ function RockPaperScissor() {
       setLose((prevLose) => prevLose + 1);
       setround([...round, computer]);
     }
-
     if (round.length === 5) {
       setTimeout(() => {
         if (win > lose) {
           setFinalWinner("Congratulations! You won the game! 🎉");
         } else if (lose > win) {
           setFinalWinner("Computer Wins the Game! Better Luck Next Time 😔");
-        } else {
+        } else if(win === lose){
           setFinalWinner("It's an Overall Draw! 🤝");
         }
         setShow1(true);
@@ -109,10 +94,16 @@ function RockPaperScissor() {
       });
       if (res.data.status === "success") {
         console.log(res.data, "Data");
+        navigate("/leaderboard", {
+          state: {
+            id: location.state.id,
+          },
+        });
       }
     } catch (error) {
       console.log(error, "Error");
     }
+
   };
 
   useEffect(() => {
@@ -120,84 +111,85 @@ function RockPaperScissor() {
   });
 
   return (
-    <>
-     <h3 className="ajdhgwa">Welcome {user}!</h3>
-      <div className="sdfbs">
-        <div className="mycontainer">
-          <h3 className="text-light m-0">Score : {score}</h3>
-
-          <h1>Rock - Paper - Scissor</h1>
-          <h4 className="choose">Choose any move</h4>
-          <div className="buttons">
-            {options.map((option) => (
-              <button
-                key={option}
-                onClick={() => playRound(option)}
-                className="wbtn"
-              >
-                {option === "Rock" ? "✊" : option === "Paper" ? "🖐️" : "✌️"}
-              </button>
-            ))}
-          </div>
-
-          <p>Remain Chance :{6 - round.length} / 6</p>
-
-          <Modal show={show1} onHide={handleClose1}>
-            <Modal.Header closeButton>
-              <Modal.Title> {finalWinner}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body></Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose1}>
-                Thank You
-              </Button>
-            </Modal.Footer>
-          </Modal>
-
-          <div>
-            <button
-              className="rpcReloadbtn"
-              onClick={() =>
-                navigate("/leaderboard", {
-                  state: {
-                    id: location.state.id,
-                  },
-                })
-              }
-            >
-              View Score
-            </button>
-
-            <a href={"/"}>
-              <button className="rpcReloadbtn">Back to Home</button>
-            </a>
-          </div>
-
-          <p className="result">
-            Won = {win} || Lost = {lose} || Draw = {draw}
-          </p>
-
-          {(playermove || compmove) && (
-            <p className="fs-6 fw-light">
-              You Picked Up <span className="fw-bold">{playermove}</span> And
-              Computer Picked Up <span className="fw-bold">{compmove}</span>
-            </p>
-          )}
-          {!!winner && winner === "win" && (
-            <div className="result rounded w-80 d-inline green">You WON!</div>
-          )}
-          {!!winner && winner === "lost" && (
-            <div className="result rounded w-80 d-inline red">You LOST!</div>
-          )}
-          {!!winner && winner === "draw" && (
-            <div className="result rounded w-80 d-inline gray">
-              It's a DRAW!
+    <Layout>
+      {" "}
+      <>
+        <h3 className="dsfbsdb">Welcome {user}!</h3>
+        <div className="sdfbs">
+          <div className="mycontainer">
+            <h3 className="text-light m-0">Score : {score}</h3>
+            <h1>Rock - Paper - Scissor</h1>
+            <h4 className="choose">Choose any move</h4>
+            <div className="buttons">
+              {options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => playRound(option)}
+                  className="wbtn"
+                >
+                  {option === "Rock" ? "✊" : option === "Paper" ? "🖐️" : "✌️"}
+                </button>
+              ))}
             </div>
-          )}
+
+            <p>Remain Chance :{6 - round.length} / 6</p>
+
+            <Modal show={show1} onHide={handleClose1}>
+              <Modal.Header closeButton>
+                <Modal.Title> {finalWinner}</Modal.Title>
+              </Modal.Header>
+              <Modal.Body></Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose1}>
+                  Thank You
+                </Button>
+              </Modal.Footer>
+            </Modal>
+
+            <div>
+              <button
+                className="rpcReloadbtn"
+                onClick={() =>
+                  navigate("/leaderboard", {
+                    state: {
+                      id: location.state.id,
+                    },
+                  })
+                }
+              >
+                View Score
+              </button>
+              <a href={"/"}>
+                <button className="rpcReloadbtn">Back to Home</button>
+              </a>
+            </div>
+
+            <p className="result">
+              Won = {win} || Lost = {lose} || Draw = {draw}
+            </p>
+
+            {(playermove || compmove) && (
+              <p className="fs-6 fw-light">
+                You Picked Up <span className="fw-bold">{playermove}</span> And
+                Computer Picked Up <span className="fw-bold">{compmove}</span>
+              </p>
+            )}
+            {!!winner && winner === "win" && (
+              <div className="result rounded w-80 d-inline green">You WON!</div>
+            )}
+            {!!winner && winner === "lost" && (
+              <div className="result rounded w-80 d-inline red">You LOST!</div>
+            )}
+            {!!winner && winner === "draw" && (
+              <div className="result rounded w-80 d-inline gray">
+                It's a DRAW!
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-      <NamePopUp show={modalShow} onHide={() => setModalShow(false)} />
-    </>
+        <NamePopUp show={modalShow} onHide={() => setModalShow(false)} />
+      </>
+    </Layout>
   );
 }
 

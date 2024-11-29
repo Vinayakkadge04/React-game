@@ -7,7 +7,8 @@
   color: #633399;
 }
 
-.snake_App h1 {
+.snake_App h1 
+{
   margin: auto;
   padding: 1rem;
   font-size: 3rem;
@@ -26,7 +27,9 @@
   box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
 
 }
-
+.snake_App h5{
+  margin: 0;
+}
 .snakerow {
   display: flex;
   
@@ -111,8 +114,8 @@ button:hover {
 
 @media screen and (max-width:440px){
   .snake_App h1{
-    font-size: 38px;
-    padding: 4px;
+    font-size: 28px;
+    padding: 0;
   }
   .game-board{
     width: 100%;
@@ -121,14 +124,17 @@ button:hover {
     position: static;
 
   }
-  .button{
+  .snake_App .button{
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: center !important;
+    justify-content: center !important;
+   width: -webkit-fill-available;
+    top: 13%;
   }
   .button button{
     width: fit-content;
     min-width: 50px;
-
+    margin: 4px;
   }
+ 
 }

@@ -9,7 +9,7 @@ import NamePopUp from "../name_pop";
 import { useSelector } from "react-redux";
 import { URL } from "../utils/constants";
 import axios from "axios";
-
+import Layout from "../Layout";
 
 const defaultSquares = () => new Array(9).fill(null);
 const lines = [
@@ -41,9 +41,7 @@ function TicTacToe() {
   const [overwinner, setOverWinner] = useState("");
   const location = useLocation();
   const [modalShow, setModalShow] = React.useState(true);
-
   const {user,nameEntered,id} = useSelector((state)=>state.user)
-
 
   let isPlayerWon = false;
   useEffect(() => {
@@ -137,8 +135,7 @@ function TicTacToe() {
       const newSquares = squares;
       newSquares[index] = "x";
       setSquares([...newSquares]);
-    }
-  }
+    }}
 
   const resetBoard = () => {
     setRound(round - 1);
@@ -146,17 +143,19 @@ function TicTacToe() {
     setWinner(null);
   };
 
+
+  useEffect(()=>{
+    console.log(user,"User Name" ,id,"User Id" , "IsEntered", nameEntered);
+  },[])
+
+
+
   useEffect(() => {
     console.log(round, "Round");
     if (round === 0) {
       setEnd(true);
       handleShow();
       InsertScore();
-      navigate("/leaderboard", {
-        state: {
-          id: location.state.id,
-        },
-      })
       if (winsLossesDraws.wins > winsLossesDraws.losses) {
         setOverWinner("You Won");
       } else {
@@ -166,11 +165,17 @@ function TicTacToe() {
   }, [round]);
 
   useEffect(() => {
-    setModalShow(!nameEntered);
+    console.log(nameEntered,"NameEntered");
+    if(nameEntered){
+      setModalShow(false);
+    }else{
+      setModalShow(true)
+    }
+  
   }, [nameEntered]);
 
-  const InsertScore = async() =>{
-    console.log("Hello")
+  const InsertScore = async() => {
+    console.log(user,"User Name" ,id,"User Id" , location.state.id,"GameId");
     try{
       const url = URL+'leaderboard'
       const res = await axios({
@@ -217,7 +222,8 @@ function TicTacToe() {
   
 
   return (
-    <>
+   <Layout>
+     <>
       <div className="ticbody">
         <h3 className="ajdhgwa">Welcome {user}!</h3>
       <div className="navigation">
@@ -296,6 +302,7 @@ function TicTacToe() {
 
       <NamePopUp  show={modalShow} onHide={() => setModalShow(false)}/>
     </>
+   </Layout>
   );
 }
 

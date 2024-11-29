@@ -1,10 +1,10 @@
 
 import { Outlet, Link } from "react-router-dom";
 
-const Layout = () => {
+const Layout = ({children}) => {
   return (
     <main className="main" id="top">
-      <Outlet/>
+     {children}
     </main>
   );
 };

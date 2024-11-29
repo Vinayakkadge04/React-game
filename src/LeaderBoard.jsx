@@ -14,7 +14,7 @@ function LeaderBoard() {
   useEffect(() => {
     console.log(location.state.id, "GameId");
     getData();
-  });
+  },[]);
 
   const getData = async () => {
     try {
@@ -40,7 +40,7 @@ function LeaderBoard() {
           </tr>
         </thead>
         <tbody>
-          {Gamedata.map((item, index) => (
+          {Gamedata.slice(0,10).map((item, index) => (
           
             <tr>
               <td scope="row">{index+1}</td>
